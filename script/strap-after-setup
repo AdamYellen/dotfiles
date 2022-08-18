@@ -3,24 +3,77 @@
 
 cd $(dirname $0)/..
 
-# Close terminal windows on successful exit code
-/usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.Terminal.plist -c \
-  "Set 'Window Settings':Basic:shellExitAction 1"
+# Prompt the user
+echo "!! IMPORTANT !!"
+read -p "This script requires user input -- Press Return to continue"
+
+# Setup 1Password
+if [ -n ${OP_SIGNUP_URI}]
+then
+  read -s -p "Please enter a 1Password signup URI: "
+  OP_SIGNUP_URI = ${REPLY}
+fi
+echo "!! IMPORTANT !!"
+echo "Press Return to continue AFTER 1Password is setup. Sign in and enable CLI under Developer settings."
+open /Applications/1Password.app --args --disable-gpu "${OP_SIGNUP_URI}"
+read
+
+# Retrieve our secrets from 1Password
+bin/extract-onepassword-secrets
+if [ -f "$HOME/.secrets" ]
+then
+  source ~/.secrets
+else
+  echo "Secrets are missing!" >&2
+  exit 1
+fi
+
+# Setup Syncthing
+echo "!! IMPORTANT !!"
+echo "Press Return to continue AFTER the sync completes... "
+open /Applications/Syncthing.app
+sleep 10
+defaults write com.github.xor-gate.syncthing-macosx StartAtLogin 1
+if [ -n "$SECRET_SYNCTHING_MASTER_DEVICE_ID" && -n "$SECRET_SYNCTHING_MASTER_FOLDER_ID" ]
+then
+  /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config devices add --device-id "${SECRET_SYNCTHING_MASTER_DEVICE_ID}"
+  /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config folders add --id "${SECRET_SYNCTHING_MASTER_FOLDER_ID}" --label "configs (~/.sync)" --path "~/.sync"
+fi
+sleep 5
+open "http://127.0.0.1:8384"
+read
+if ! [ -f "$HOME/.sync/.first-sync" ]
+then
+  echo "Syncthing is not setup!" >&2
+  exit 1
+fi
 
 # Setup my home directory how I like it
-mkdir -pv ~/OSS ~/GitHub
-ln -vsf "$(brew --repository)" ~/OSS/Homebrew
-ln -vsf "$(pwd -P)" ~/OSS/dotfiles
+mkdir -pv ~/Projects
 
-script/install-vscode-extensions
-
-# Use ZSH as my default Shell
-if [ "$SHELL" != "/bin/zsh" ]
-then
-  chsh -s /bin/zsh mike
-fi
+# script/install-vscode-extensions
 
 bin/touchid-enable-pam-sudo
 
 # Ensure auto-update is always enabled
-sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
+# sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
+
+# Close terminal windows on successful exit code
+/usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.Terminal.plist -c "Set 'Window Settings':Basic:shellExitAction 1"
+
+# Install our fonts
+# AY: maybe add to Brewfile instead
+# brew install $( brew search font | grep -e meslo -e for-powerline | tr '\n' ' ' )
+
+# Fix terminal fonts
+# NOTE: the sync'd terminal profile references fonts by ID which can be different on each machine
+script/setup-terminal-font.scpt
+
+# Install Rotz
+cargo install rotz
+
+# Go Rotz
+~/.cargo/bin/rotz install
+~/.cargo/bin/rotz link -f
+~/.cargo/bin/rotz -d ~/.sync install
+~/.cargo/bin/rotz -d ~/.sync link -f

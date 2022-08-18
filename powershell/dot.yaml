@@ -1,0 +1,5 @@
+darwin:
+  installs: brew install powershell
+
+windows:
+  installs: winget install Microsoft.PowerShell --silent --accept-source-agreements --accept-package-agreements | Out-Null

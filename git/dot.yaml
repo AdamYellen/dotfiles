@@ -1,0 +1,12 @@
+global:
+  installs: false
+
+darwin:
+  links:
+    gitconfig: ~/.gitconfig
+    gitignore: ~/.gitignore
+
+windows:
+  links:
+    gitconfig: ~/.gitconfig
+    gitignore: ~/.gitignore

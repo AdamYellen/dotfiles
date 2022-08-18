@@ -1,0 +1,11 @@
+tap "homebrew/cask"
+#tap "homebrew/cask-fonts"
+#tap "homebrew/services"
+
+# Absolute minimum needed to test strapping a machine
+brew "gnupg"
+brew "pinentry-mac"
+cask "1password"
+cask "1password-cli"
+cask "syncthing"
+brew "rust"

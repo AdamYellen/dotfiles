@@ -1,0 +1,24 @@
+[Setup]
+Lang=default
+Dir=C:\Program Files\Git
+Group=Git
+NoIcons=0
+SetupType=default
+Components=gitlfs
+Tasks=
+EditorOption=VisualStudioCode
+CustomEditorPath=
+DefaultBranchOption=main
+PathOption=Cmd
+SSHOption=OpenSSH
+TortoiseOption=false
+CURLOption=WinSSL
+CRLFOption=CRLFCommitAsIs
+BashTerminalOption=ConHost
+GitPullBehaviorOption=Merge
+UseCredentialManager=Enabled
+PerformanceTweaksFSCache=Enabled
+EnableSymlinks=Enabled
+EnablePseudoConsoleSupport=Disabled
+EnableFSMonitor=Disabled
+

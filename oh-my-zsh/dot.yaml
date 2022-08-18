@@ -1,0 +1,9 @@
+global:
+  installs: false
+
+darwin:
+  links:
+    oh-my-zsh-custom: ~/.oh-my-zsh-custom
+    zshrc.sh: ~/.zshrc
+  installs:
+    cmd: ~/.dotfiles/oh-my-zsh/install.sh

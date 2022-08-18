@@ -1,0 +1,5 @@
+darwin:
+  installs: brew install visual-studio-code
+
+windows:
+  installs: winget install Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements | Out-Null

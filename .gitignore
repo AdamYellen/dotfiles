@@ -6,6 +6,7 @@
 /gnupg/*.db
 /gnupg/*.gpg
 /gnupg/*.kbx
+/gnupg/*.kb_
 /gnupg/*.private.*
 /gnupg/*.lock
 /gnupg/.*

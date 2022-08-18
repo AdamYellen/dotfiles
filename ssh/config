@@ -1,11 +1,18 @@
+Host *
+  IgnoreUnknown AddKeysToAgent,UseKeychain
+
+Match exec "host-is-darwin"
+		Include config.d/darwin
+
+Match exec "host-is-linux"
+		Include config.d/linux
+
+Match exec "host-is-windows"
+	Include config.d/windows
+
 Host *.github.com *.github.net *.githubapp.com
 	ForwardAgent no
-	User mikemcquaid
-
-Host github-shell
-	User mikemcquaid
-	HostName shell.service.ac4-iad.github.net
-	ProxyJump bastion.githubapp.com
+	User AdamYellen
 
 Host github-codespaces
 	User root
@@ -18,7 +25,4 @@ Host *
 	NoHostAuthenticationForLocalhost yes
 	IdentityFile ~/.ssh/id_ed25519
 	IdentityFile ~/.ssh/id_rsa
-	UseKeychain yes
 	AddKeysToAgent yes
-	ControlMaster auto
-	ControlPath /tmp/ssh-%r@%h:%p.socket

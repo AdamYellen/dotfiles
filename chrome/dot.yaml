@@ -1,0 +1,9 @@
+darwin:
+  installs: brew install google-chrome
+
+windows:
+  installs: |
+    winget install Google.Chrome --silent --accept-source-agreements --accept-package-agreements | Out-Null
+    if (Test-Path -Path "C:\Users\Public\Desktop\Google Chrome.lnk") {
+      Remove-Item "C:\Users\Public\Desktop\Google Chrome.lnk"
+    }

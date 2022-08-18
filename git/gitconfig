@@ -1,11 +1,13 @@
 [user]
 	# Name used in commit messages.
-	name = Mike McQuaid
+	name = Adam Yellen
 	# Email used in commit messages.
-	email = mike@mikemcquaid.com
+	email = 6933682+AdamYellen@users.noreply.github.com
+	# Key used to sign commit messages.
+	signingkey = D0E1D6E238572F90
 [github]
 	# GitHub username for command-line tools.
-	user = MikeMcQuaid
+	user = AdamYellen
 [color]
 	# Colour terminal command output when possible.
 	ui = auto
@@ -30,7 +32,7 @@
 	# Store and re-use manual conflict resolution changes.
 	enabled = true
 [core]
-	# Exclude everything this file. Used for general exclusions.
+	# Exclude everything in this file. Used for general exclusions.
 	excludesfile = ~/.gitignore
 	# Set attributes on files. Used for general diff improvements.
 	attributesfile = ~/.gitattributes
@@ -40,6 +42,8 @@
 	commitGraph = true
 	# Output unicode characters (e.g. emoji).
 	quotepath = on
+	# Never mess with line endings
+	autocrlf = off
 [help]
   # Autocorrect mistyped commands.
 	autocorrect = 1
@@ -124,12 +128,12 @@
 	# `brew style` changed files
 	brew-style-changed = !git diff origin/HEAD --name-only | xargs brew style --fix --display-cop-names
 
-	# Push the current branch upstream to MikeMcQuaid using the same
-	# branch name for the remote branch.
-	um = !(git remote -v | grep -q MikeMcQuaid || gh repo fork --remote-name MikeMcQuaid) \
-	    && git push --set-upstream MikeMcQuaid $(git current-branch)
-	# Push the current branch to MikeMcQuaid and open a pull request.
-	umpr = !git um && gh pr create --web --head MikeMcQuaid:$(git current-branch)
+	# # Push the current branch upstream to MikeMcQuaid using the same
+	# # branch name for the remote branch.
+	# um = !(git remote -v | grep -q MikeMcQuaid || gh repo fork --remote-name MikeMcQuaid) \
+	#     && git push --set-upstream MikeMcQuaid $(git current-branch)
+	# # Push the current branch to MikeMcQuaid and open a pull request.
+	# umpr = !git um && gh pr create --web --head MikeMcQuaid:$(git current-branch)
 
 	## Shortened 'New' Commands
 	fahr = !git fetch --all && git hard-reset
@@ -188,7 +192,7 @@
 	# Use my custom dotfiles credentials helper.
 	helper = dotfiles
 [credential "https://github.com"]
-	username = MikeMcQuaid
+	username = AdamYellen
 [hub]
 	# Use HTTPS rather than SSH protocol in Hub
 	protocol = https
