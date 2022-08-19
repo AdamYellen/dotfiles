@@ -318,19 +318,9 @@ if($True)
     #Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\CloudContent" "DisableConsumerAccountStateContent" 1 -Force
 
     # Uninstall pre-installed apps
-    if(IsWindows10)
+    if(Test-Path "$HOME\.dotfiles\bin\remove-windows-apps.ps1")
     {
-        if(Test-Path "$HOME\.dotfiles\bin\remove-win10apps.ps1")
-        {
-            & "$HOME\.dotfiles\bin\remove-win10apps.ps1"
-        }
-    }
-    else
-    {
-        if(Test-Path "$HOME\.dotfiles\bin\remove-win11apps.ps1")
-        {
-            & "$HOME\.dotfiles\bin\remove-win11apps.ps1"
-        }
+        & "$HOME\.dotfiles\bin\remove-windows-apps.ps1"
     }
 }
 

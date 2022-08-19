@@ -14,7 +14,6 @@ param($strap_op_uri)
 # * Don't error out; allow the user to attempt to fix the issue
 # * Support unavailable biometrics in 1Password setup (add 1Password account directly on the CLI)
 # * Find the executable paths dynamically (1Password, Synctrazor/Syncthing)
-# * Consolidate remove-win*apps
 
 function CheckCommand
 {
@@ -249,19 +248,9 @@ Write-Host "Updating PowerShell help..." -ForegroundColor "Green"
 Update-Help -UICulture en-US -Force -ErrorAction SilentlyContinue | Out-Null
 
 # Remove installed Apps that came back after Windows updated
-if(IsWindows10)
+if(Test-Path "$HOME\.dotfiles\bin\remove-windows-apps.ps1")
 {
-   if(Test-Path "$HOME\.dotfiles\bin\remove-win10apps.ps1")
-   {
-      & "$HOME\.dotfiles\bin\remove-win10apps.ps1"
-   }
-}
-else
-{
-   if(Test-Path "$HOME\.dotfiles\bin\remove-win11apps.ps1")
-   {
-      & "$HOME\.dotfiles\bin\remove-win11apps.ps1"
-   }
+   & "$HOME\.dotfiles\bin\remove-windows-apps.ps1"
 }
 
 # Install Rotz
