@@ -79,6 +79,7 @@ while(-not (CheckCommand -cmdname 'winget'))
 Write-Host "Installing dependencies..." -ForegroundColor "Green"
 if(CheckCommand -cmdname 'scoop')
 {
+   # 1password-cli is currently not available in winget
    scoop install 1password-cli 6>&1 | Out-Null
 }
 else
