@@ -3,8 +3,20 @@
 # NOTES:
 # * This script is idempotent
 # * This script does not require user input
-# * NOTE: "winget" is not available during the lifetime of this script
+# * NOTE: "winget" is not reliably available during the lifetime of this script (especially on Windows 10)
 # * Preconditions: none
+
+$SETUP_PRIVACY = $False
+$SETUP_DEVICE_POWER_STARTUP = $True
+$SETUP_DESKTOP_EXPLORER_TASKBAR_SYSTEMTRAY = $True
+$SETUP_DEFAULT_APPS = $True
+$SETUP_STARTMENU = $True
+$SETUP_ACCESSIBILITY = $True
+$SETUP_INTERNET_EXPLORER = $True
+$SETUP_DISK_CLEANUP = $False
+$SETUP_POWERSHELL = $True
+$SETUP_DEVELOPMENT = $True
+$SETUP_WSL2 = $True
 
 function DoUnpinFromTaskbar([string]$appname)
 {
@@ -38,7 +50,7 @@ function IsWindows10()
 }
 
 # Privacy
-if($False)
+if($SETUP_PRIVACY)
 {
     Write-Host "Configuring Privacy..." -ForegroundColor "Green"
 
@@ -201,7 +213,7 @@ if($False)
 }
 
 # Devices, Power, and Startup
-if($True)
+if($SETUP_DEVICE_POWER_STARTUP)
 {
     Write-Host "Configuring Devices, Power, and Startup..." -ForegroundColor "Green"
 
@@ -224,7 +236,7 @@ if($True)
 }
 
 # Desktop, Explorer, Taskbar, and System Tray
-if($True)
+if($SETUP_DESKTOP_EXPLORER_TASKBAR_SYSTEMTRAY)
 {
     Write-Host "Configuring Desktop, Explorer, Taskbar, and System Tray..." -ForegroundColor "Green"
 
@@ -305,7 +317,7 @@ if($True)
 }
 
 # Default Windows Applications
-if($True)
+if($SETUP_DEFAULT_APPS)
 {
     Write-Host "Configuring Default Windows Applications..." -ForegroundColor "Green"
 
@@ -325,12 +337,14 @@ if($True)
 }
 
 # Start Menu
-if($True)
+if($SETUP_STARTMENU)
 {
     Write-Host "Configuring Start Menu (Don't press any keys)..." -ForegroundColor "Green"
 
-    # Our blank template
-    $START_MENU_LAYOUT = @"
+    if(IsWindows10)
+    {
+        # Our blank template
+        $START_MENU_LAYOUT = @"
 <LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
     <LayoutOptions StartTileGroupCellWidth="6" />
     <DefaultLayoutOverride>
@@ -341,60 +355,61 @@ if($True)
 </LayoutModificationTemplate>
 "@
 
-    $layoutFile="C:\Windows\StartMenuLayout.xml"
-    # $regAliases = @("HKLM", "HKCU")
-    $regAliases = @("HKCU")
+        $layoutFile="C:\Windows\StartMenuLayout.xml"
+        # $regAliases = @("HKLM", "HKCU")
+        $regAliases = @("HKCU")
 
-    # Delete layout file if it already exists
-    If(Test-Path -Path $layoutFile)
-    {
-        Remove-Item $layoutFile -Force | Out-Null
-    }
-
-    # Creates the blank layout file
-    $START_MENU_LAYOUT | Out-File $layoutFile -Encoding ASCII
-
-    # Assign the start layout and force it to apply with "LockedStartLayout" at both the machine and user level
-    foreach($regAlias in $regAliases)
-    {
-        $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
-        $keyPath = $basePath + "\Explorer" 
-        If(!(Test-Path -Path $keyPath))
+        # Delete layout file if it already exists
+        If(Test-Path -Path $layoutFile)
         {
-            New-Item -Path $basePath -Name "Explorer" | Out-Null
+            Remove-Item $layoutFile -Force | Out-Null
         }
-        Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 1
-        Set-ItemProperty -Path $keyPath -Name "StartLayoutFile" -Value $layoutFile
+
+        # Creates the blank layout file
+        $START_MENU_LAYOUT | Out-File $layoutFile -Encoding ASCII
+
+        # Assign the start layout and force it to apply with "LockedStartLayout" at both the machine and user level
+        foreach($regAlias in $regAliases)
+        {
+            $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
+            $keyPath = $basePath + "\Explorer" 
+            If(!(Test-Path -Path $keyPath))
+            {
+                New-Item -Path $basePath -Name "Explorer" | Out-Null
+            }
+            Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 1
+            Set-ItemProperty -Path $keyPath -Name "StartLayoutFile" -Value $layoutFile
+        }
+
+        # Restart Explorer, open the start menu (necessary to load the new layout), and give it a few seconds to process
+        Stop-Process -name explorer
+        Start-Sleep -s 5
+        $wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('^{ESCAPE}')
+        Start-Sleep -s 5
+
+        # Enable the ability to pin items again by disabling "LockedStartLayout"
+        foreach($regAlias in $regAliases)
+        {
+            $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
+            $keyPath = $basePath + "\Explorer" 
+            Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 0
+        }
+
+        # Hide Recently Added Items
+        if(!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Type Folder | Out-Null}
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "HideRecentlyAddedApps" -Value 1
+
+        # Restart Explorer and delete the layout file
+        Stop-Process -name explorer
+        Start-Sleep -s 5
+        $wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('^{ESCAPE}')
+        Start-Sleep -s 5
+        Remove-Item $layoutFile
     }
-
-    # Restart Explorer, open the start menu (necessary to load the new layout), and give it a few seconds to process
-    Stop-Process -name explorer
-    Start-Sleep -s 5
-    $wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('^{ESCAPE}')
-    Start-Sleep -s 5
-
-    # Enable the ability to pin items again by disabling "LockedStartLayout"
-    foreach($regAlias in $regAliases)
-    {
-        $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
-        $keyPath = $basePath + "\Explorer" 
-        Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 0
-    }
-
-    # Hide Recently Added Items
-    if(!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Type Folder | Out-Null}
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "HideRecentlyAddedApps" -Value 1
-
-    # Restart Explorer and delete the layout file
-    Stop-Process -name explorer
-    Start-Sleep -s 5
-    $wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('^{ESCAPE}')
-    Start-Sleep -s 5
-    Remove-Item $layoutFile
 }
 
 # Accessibility and Ease of Use
-if($True)
+if($SETUP_ACCESSIBILITY)
 {
     Write-Host "Configuring Accessibility..." -ForegroundColor "Green"
 
@@ -424,7 +439,7 @@ if($True)
 }
 
 # Internet Explorer
-if($True)
+if($SETUP_INTERNET_EXPLORER)
 {
     Write-Host "Configuring Internet Explorer..." -ForegroundColor "Green"
 
@@ -445,7 +460,7 @@ if($True)
 }
 
 # Disk Cleanup (CleanMgr.exe)
-if($False)
+if($SETUP_DISK_CLEANUP)
 {
     Write-Host "Configuring Disk Cleanup..." -ForegroundColor "Green"
 
@@ -483,7 +498,7 @@ if($False)
 }
 
 # PowerShell Console
-if($True)
+if($SETUP_POWERSHELL)
 {
     Write-Host "Configuring Console..." -ForegroundColor "Green"
 
@@ -492,7 +507,7 @@ if($True)
 }
 
 # Development
-if($True)
+if($SETUP_DEVELOPMENT)
 {
     Write-Host "Enable Development Settings..." -ForegroundColor "Green"
 
@@ -506,45 +521,43 @@ if($True)
 }
 
 # WSL2
-if($False)
+if($SETUP_WSL2)
 {
     Write-Host "Installing Windows Subsystem for Linux..." -ForegroundColor "Green"
     wsl --install | Out-Null
 }
 
 # Home directory
-if($True)
+Write-Host "Setup home directory..." -ForegroundColor "Green"
+
+# setup SSH
+if(Test-Path -Path "$HOME\.ssh")
 {
-    Write-Host "Setup home directory..." -ForegroundColor "Green"
-
-    # setup SSH
-    if(Test-Path -Path "$HOME\.ssh")
-    {
-        Remove-Item "$HOME\.ssh" -Force | Out-Null
-    }
-    New-Item -ItemType SymbolicLink -Path "$HOME\.ssh" -Target "$HOME\.dotfiles\ssh" | Out-Null
-
-    # setup GPG
-    if(Test-Path -Path "$env:APPDATA\gnupg")
-    {
-        Remove-Item "$env:APPDATA\gnupg" -Force | Out-Null
-    }
-    New-Item -ItemType SymbolicLink -Path "$env:APPDATA\gnupg" -Target "$HOME\.dotfiles\gnupg" | Out-Null
-    if(Test-Path -Path "$HOME\.gnupg")
-    {
-        Remove-Item "$HOME\.gnupg" -Force | Out-Null
-    }
-    New-Item -ItemType SymbolicLink -Path "$HOME\.gnupg" -Target "$HOME\.dotfiles\gnupg" | Out-Null
-
-    # setup bin
-    if(Test-Path -Path "$HOME\.bin")
-    {
-        Remove-Item "$HOME\.bin" -Force | Out-Null
-    }
-    New-Item -ItemType SymbolicLink -Path "$HOME\.bin" -Target "$HOME\.dotfiles\bin" | Out-Null
-
-    New-Item -Path "$HOME\Projects" -ItemType Directory -Force | Out-Null
+    Remove-Item "$HOME\.ssh" -Force | Out-Null
 }
+New-Item -ItemType SymbolicLink -Path "$HOME\.ssh" -Target "$HOME\.dotfiles\ssh" | Out-Null
+
+# setup GPG
+if(Test-Path -Path "$env:APPDATA\gnupg")
+{
+    Remove-Item "$env:APPDATA\gnupg" -Force | Out-Null
+}
+New-Item -ItemType SymbolicLink -Path "$env:APPDATA\gnupg" -Target "$HOME\.dotfiles\gnupg" | Out-Null
+if(Test-Path -Path "$HOME\.gnupg")
+{
+    Remove-Item "$HOME\.gnupg" -Force | Out-Null
+}
+New-Item -ItemType SymbolicLink -Path "$HOME\.gnupg" -Target "$HOME\.dotfiles\gnupg" | Out-Null
+
+# setup bin
+if(Test-Path -Path "$HOME\.bin")
+{
+    Remove-Item "$HOME\.bin" -Force | Out-Null
+}
+New-Item -ItemType SymbolicLink -Path "$HOME\.bin" -Target "$HOME\.dotfiles\bin" | Out-Null
+
+# setup other directories
+New-Item -Path "$HOME\Projects" -ItemType Directory -Force | Out-Null
 
 # All done!
 Write-Host "Setup complete -- Returning to strap..." -ForegroundColor "Green"
