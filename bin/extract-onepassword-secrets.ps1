@@ -21,7 +21,7 @@ function onepassword_login() {
    )
 
    Start-Sleep -Seconds 1
-   op signin --account $account
+   Invoke-Expression $(op signin --account $account)
    $retval = $?
    Start-Sleep -Seconds 1
    return $retval
