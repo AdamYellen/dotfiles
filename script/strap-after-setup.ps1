@@ -170,7 +170,8 @@ if($SECRET_SYNCTHING_MASTER_DEVICE_ID -and $SECRET_SYNCTHING_MASTER_FOLDER_ID)
    Start-Process -Filepath "$env:APPDATA\SyncTrayzor\syncthing.exe" -NoNewWindow -Args "cli config devices add --device-id $SECRET_SYNCTHING_MASTER_DEVICE_ID"
    Start-Sleep -Seconds 2
    New-Item -Path "$HOME\.sync" -ItemType Directory -Force | Out-Null
-   Start-Process -Filepath "$env:APPDATA\SyncTrayzor\syncthing.exe" -NoNewWindow -Args "cli config folders add --id $SECRET_SYNCTHING_MASTER_FOLDER_ID --label `"configs (~.sync)`" --path ~\.sync"
+   $homedir = Resolve-Path -Path "$HOME\.sync"
+   Start-Process -Filepath "$env:APPDATA\SyncTrayzor\syncthing.exe" -NoNewWindow -Args "cli config folders add --id $SECRET_SYNCTHING_MASTER_FOLDER_ID --label `"configs (~.sync)`" --path `"$homedir`""
 }
 
 Read-Host -Prompt "Is Syncthing setup and sync completed? Press Return to continue"
