@@ -134,14 +134,15 @@ gpg --list-keys | Out-Null
 # Import our secrets by pretending we're BASH
 if(Test-Path "$HOME\.secrets")
 {
-   Get-Content "$HOME\.secrets" | Select-String -NotMatch "^#" | ForEach-Object
+   foreach($line in (Get-Content "$HOME\.secrets" | Select-String -NotMatch "^#"))
    { 
-      $array = $_[0].ToString().split("=")
+      $array = $line[0].ToString().split("=")
       if($array[0] -and $array[1])
       {
          # .secrets probably shouldn't export secrets, but remove it if it exists
          $exportArray = $array[0].ToString().split(" ")
-         if(($exportArray[0] -eq "export") -and $exportArray[1]) {
+         if(($exportArray[0] -eq "export") -and $exportArray[1])
+         {
             $array[0] = $exportArray[1]
          }
          New-Variable -Name $array[0] -Value $array[1] -Force -Scope Script
