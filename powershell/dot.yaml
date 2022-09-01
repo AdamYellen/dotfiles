@@ -3,3 +3,4 @@ darwin:
 
 windows:
   installs: winget install Microsoft.PowerShell --silent --accept-source-agreements --accept-package-agreements | Out-Null
+  # Update-Help -UICulture en-US

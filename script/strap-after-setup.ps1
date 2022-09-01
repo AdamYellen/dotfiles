@@ -245,6 +245,21 @@ Write-Host "Setup SSH..." -ForegroundColor "Green"
 # By default the ssh-agent service is disabled. Configure it to start automatically.
 Get-Service ssh-agent | Set-Service -StartupType Automatic
 Start-Service ssh-agent
+Get-Service sshd | Set-Service -StartupType Automatic
+Start-Service sshd
+
+# Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
+if(!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled))
+{
+   New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+}
+
+# Use PowerShell as our default shell
+New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Program Files\PowerShell\7\pwsh.exe" -PropertyType String -Force
+
+# Add our authorized key to the special admin group and fix permissions
+Copy-Item -Path "$HOME\.ssh\authorized_keys" -Destination "$Env:PROGRAMDATA\ssh\administrators_authorized_keys"
+icacls.exe "C:\ProgramData\ssh\administrators_authorized_keys" /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F"
 
 # Update built-in help
 if(Get-Command -cmdname 'pwsh')
