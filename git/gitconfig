@@ -44,6 +44,8 @@
 	quotepath = on
 	# Never mess with line endings
 	autocrlf = off
+	# Enable symlinks
+	symlinks = true
 [help]
   # Autocorrect mistyped commands.
 	autocorrect = 1
