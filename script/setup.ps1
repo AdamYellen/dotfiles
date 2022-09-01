@@ -31,7 +31,7 @@ function DoUnpinFromTaskbar([string]$appname)
  function DoPinToQuickAccess([string]$folder)
  {
     $ErrorActionPreference = 'silentlycontinue'
-    $QuickAccess = New-Object -ComObject Shell.Application 
+    $QuickAccess = New-Object -ComObject Shell.Application
     $QuickAccess.Namespace("$folder").Self.InvokeVerb("pintohome")
     $ErrorActionPreference = 'continue'
  }
@@ -39,11 +39,11 @@ function DoUnpinFromTaskbar([string]$appname)
  function DoUnpinFromQuickAccess([string]$folder)
  {
     $ErrorActionPreference = 'silentlycontinue'
-    $QuickAccess = New-Object -ComObject Shell.Application 
+    $QuickAccess = New-Object -ComObject Shell.Application
     ($QuickAccess.Namespace("shell:::{679f85cb-0220-4080-b29b-5540cc05aab6}").Items() | Where-Object {$_.Path -eq "$folder"}).InvokeVerb("unpinfromhome")
     $ErrorActionPreference = 'continue'
  }
- 
+
 function IsWindows10()
 {
     return([System.Environment]::OSVersion.Version.Build -lt 22000)
@@ -276,7 +276,7 @@ if($SETUP_DESKTOP_EXPLORER_TASKBAR_SYSTEMTRAY)
 
     # Taskbar: Hide Meet Now (aka Skype)
     Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" "HideSCAMeetNow" 1
-    
+
     # Titlebar: Disable theme colors on titlebar
     # Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\DWM" "ColorPrevalence" 0
 
@@ -285,15 +285,15 @@ if($SETUP_DESKTOP_EXPLORER_TASKBAR_SYSTEMTRAY)
 
     # Desktop: Show 'This PC' Icon
     $thisPCIconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
-    $thisPCRegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" 
-    $item = Get-ItemProperty -Path $thisPCIconRegPath -Name $thisPCRegValname -ErrorAction SilentlyContinue 
+    $thisPCRegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
+    $item = Get-ItemProperty -Path $thisPCIconRegPath -Name $thisPCRegValname -ErrorAction SilentlyContinue
     if($item)
     {
-        Set-ItemProperty  -Path $thisPCIconRegPath -Name $thisPCRegValname -Value 0  
+        Set-ItemProperty  -Path $thisPCIconRegPath -Name $thisPCRegValname -Value 0
     }
     else
     {
-        New-ItemProperty -Path $thisPCIconRegPath -Name $thisPCRegValname -Value 0 -PropertyType DWORD | Out-Null  
+        New-ItemProperty -Path $thisPCIconRegPath -Name $thisPCRegValname -Value 0 -PropertyType DWORD | Out-Null
     }
 
     # Desktop: Microsoft Edge Icon
@@ -369,7 +369,7 @@ if($SETUP_STARTMENU)
         foreach($regAlias in $regAliases)
         {
             $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
-            $keyPath = $basePath + "\Explorer" 
+            $keyPath = $basePath + "\Explorer"
             If(!(Test-Path -Path $keyPath))
             {
                 New-Item -Path $basePath -Name "Explorer" | Out-Null
@@ -388,7 +388,7 @@ if($SETUP_STARTMENU)
         foreach($regAlias in $regAliases)
         {
             $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
-            $keyPath = $basePath + "\Explorer" 
+            $keyPath = $basePath + "\Explorer"
             Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 0
         }
 
@@ -515,6 +515,9 @@ if($SETUP_DEVELOPMENT)
 
     # Enable Developer Mode
     Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" "AllowDevelopmentWithoutDevLicense" 1
+
+    # Enable long paths
+    Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1
 }
 
 # WSL2

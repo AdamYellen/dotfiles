@@ -1,0 +1,3 @@
+windows:
+  installs:
+    winget install Microsoft.VisualStudio.2022.Community --silent --accept-source-agreements --accept-package-agreements | Out-Null

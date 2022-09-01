@@ -29,7 +29,7 @@ function UpdateStoreApps
    $wmiObj = Get-WmiObject -Namespace "root\cimv2\mdm\dmmap" -Class "MDM_EnterpriseModernAppManagement_AppManagement01"
    $wmiObj.UpdateScanMethod() | Out-Null
    Start-Sleep -Seconds 30
-   Remove-Variable wmiObj    
+   Remove-Variable wmiObj
 }
 
 function RefreshEnv
@@ -135,7 +135,7 @@ gpg --list-keys | Out-Null
 if(Test-Path "$HOME\.secrets")
 {
    foreach($line in (Get-Content "$HOME\.secrets" | Select-String -NotMatch "^#"))
-   { 
+   {
       $array = $line[0].ToString().split("=")
       if($array[0] -and $array[1])
       {
@@ -247,8 +247,11 @@ Get-Service ssh-agent | Set-Service -StartupType Automatic
 Start-Service ssh-agent
 
 # Update built-in help
-Write-Host "Updating PowerShell help..." -ForegroundColor "Green"
-Update-Help -UICulture en-US -Force -ErrorAction SilentlyContinue | Out-Null
+if(Get-Command -cmdname 'pwsh')
+{
+   Write-Host "Updating PowerShell Core help..." -ForegroundColor "Green"
+   pwsh -Command {Update-Help -UICulture en-US -Force -ErrorAction SilentlyContinue}
+}
 
 # Remove installed Apps that came back after Windows updated
 if(Test-Path "$HOME\.dotfiles\bin\remove-windows-apps.ps1")
