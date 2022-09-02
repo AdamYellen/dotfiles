@@ -4,8 +4,10 @@
 if ! [ -d "$HOME/.oh-my-zsh" ]
 then
   # Don't run the new shell when install finishes (--unattended)
-  # Don't replace our zshrc file which was already installed by script/setup (--keep-zshrc)
-  # Don't switch our shell to zsh (--skip-chsh)
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc --skip-chsh
+  # Don't replace existing zshrc file (--keep-zshrc)
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+
+  # Remove default .zshrc so we can link our own
+  rm -f ~/.zshrc
 fi
 exit 0

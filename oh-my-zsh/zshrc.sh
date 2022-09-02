@@ -80,6 +80,15 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 export PATH="/usr/local/sbin:$PATH:$HOME/.cargo/bin"
 
+# Add Homebrew variables
+if [ -x "/opt/homebrew/bin/brew" ]
+then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x "/usr/local/bin/brew" ]
+then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 

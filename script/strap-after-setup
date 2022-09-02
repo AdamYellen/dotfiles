@@ -11,7 +11,7 @@ read -p "This script requires user input -- Press Return to continue"
 if [ -n ${OP_SIGNUP_URI}]
 then
   read -s -p "Please enter a 1Password signup URI: "
-  OP_SIGNUP_URI = ${REPLY}
+  OP_SIGNUP_URI=${REPLY}
 fi
 echo "!! IMPORTANT !!"
 echo "Press Return to continue AFTER 1Password is setup. Sign in and enable CLI under Developer settings."
@@ -34,7 +34,7 @@ echo "Press Return to continue AFTER the sync completes... "
 open /Applications/Syncthing.app
 sleep 10
 defaults write com.github.xor-gate.syncthing-macosx StartAtLogin 1
-if [ -n "$SECRET_SYNCTHING_MASTER_DEVICE_ID" && -n "$SECRET_SYNCTHING_MASTER_FOLDER_ID" ]
+if [[ -n "$SECRET_SYNCTHING_MASTER_DEVICE_ID" && -n "$SECRET_SYNCTHING_MASTER_FOLDER_ID" ]]
 then
   /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config devices add --device-id "${SECRET_SYNCTHING_MASTER_DEVICE_ID}"
   /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config folders add --id "${SECRET_SYNCTHING_MASTER_FOLDER_ID}" --label "configs (~/.sync)" --path "~/.sync"
@@ -59,7 +59,7 @@ bin/touchid-enable-pam-sudo
 # sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
 
 # Close terminal windows on successful exit code
-/usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.Terminal.plist -c "Set 'Window Settings':Basic:shellExitAction 1"
+# /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.Terminal.plist -c "Set 'Window Settings':Basic:shellExitAction 1"
 
 # Install our fonts
 # AY: maybe add to Brewfile instead

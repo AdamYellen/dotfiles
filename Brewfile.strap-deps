@@ -3,6 +3,7 @@ tap "homebrew/cask"
 #tap "homebrew/services"
 
 # Absolute minimum needed to test strapping a machine
+brew "mas"
 brew "gnupg"
 brew "pinentry-mac"
 cask "1password"
