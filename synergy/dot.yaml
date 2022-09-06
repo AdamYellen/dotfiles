@@ -1,0 +1,4 @@
+darwin:
+  installs: |
+    brew install synergy
+    brew services restart synergy-core

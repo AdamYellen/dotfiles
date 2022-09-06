@@ -2,7 +2,7 @@ tap "homebrew/cask"
 tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/services"
-tap "buo/cask-upgrade"
+# tap "buo/cask-upgrade"
 
 ######################## Brews ########################################################
 # Disk Usage/Free Utility - a better 'df' alternative
@@ -86,13 +86,14 @@ mas "Baking Soda", id: 1601151613
 mas "Bumpr", id: 1166066070
 mas "DaisyDisk", id: 411643860
 mas "Downlink", id: 1454269192
+mas "Luxafor", id: 1559879690
 mas "Mactracker", id: 430255202
 mas "Microsoft To Do", id: 1274495053
 mas "Monosnap", id: 540348655
 mas "NordVPN", id: 905953485
 mas "Slack", id: 803453959
 mas "StopTheMadness", id: 1376402589
-mas "Tailscale". id: 1475387142
+mas "Tailscale", id: 1475387142
 mas "Vinegar", id: 1591303229
 mas "Xcode", id: 497799835
 

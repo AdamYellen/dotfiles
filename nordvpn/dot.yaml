@@ -1,5 +1,5 @@
 darwin:
-  installs: mas install nordvpn
+  installs: mas install 905953485
 
 windows:
   installs: winget install NordVPN.NordVPN --silent --accept-source-agreements --accept-package-agreements | Out-Null

@@ -1,0 +1,5 @@
+darwin:
+  installs: install.sh
+
+windows:
+  installs: install.ps1

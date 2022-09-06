@@ -58,16 +58,9 @@ bin/touchid-enable-pam-sudo
 # Ensure auto-update is always enabled
 # sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
 
-# Close terminal windows on successful exit code
-# /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.Terminal.plist -c "Set 'Window Settings':Basic:shellExitAction 1"
-
 # Install our fonts
 # AY: maybe add to Brewfile instead
 # brew install $( brew search font | grep -e meslo -e for-powerline | tr '\n' ' ' )
-
-# Fix terminal fonts
-# NOTE: the sync'd terminal profile references fonts by ID which can be different on each machine
-script/setup-terminal-font.scpt
 
 # Install Rotz
 cargo install rotz

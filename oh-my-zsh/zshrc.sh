@@ -78,7 +78,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
-export PATH="/usr/local/sbin:$PATH:$HOME/.cargo/bin"
+export PATH="/usr/local/sbin:$PATH:$HOME/.cargo/bin:$HOME/.bin"
 
 # Add Homebrew variables
 if [ -x "/opt/homebrew/bin/brew" ]
