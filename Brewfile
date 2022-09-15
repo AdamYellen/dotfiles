@@ -1,3 +1,7 @@
+tap "github/bootstrap"
+tap "homebrew/aliases"
+tap "homebrew/autoupdate"
+tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
