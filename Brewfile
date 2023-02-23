@@ -1,4 +1,3 @@
-tap "github/bootstrap"
 tap "homebrew/aliases"
 tap "homebrew/autoupdate"
 tap "homebrew/bundle"
