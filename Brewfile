@@ -94,7 +94,6 @@ mas "Microsoft To Do", id: 1274495053
 mas "Monosnap", id: 540348655
 mas "NordVPN", id: 905953485
 mas "Slack", id: 803453959
-mas "Spark", id: 1176895641
 mas "StopTheMadness", id: 1376402589
 mas "Tailscale", id: 1475387142
 mas "Vinegar", id: 1591303229
