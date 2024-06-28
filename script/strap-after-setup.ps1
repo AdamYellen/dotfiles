@@ -6,7 +6,7 @@ param($strap_op_uri)
 # * This script is idempotent
 # * This script requires user input and actions
 # * Preconditions:
-#   * Apps installed: scoop, winget
+#   * Apps installed: winget
 #   * Folders linked to dotfiles repo: $HOME/.bin, $HOME/.gnupg, $env:APPDATA/gnupg, $HOME/.ssh
 
 # TODO:
@@ -22,14 +22,6 @@ function CheckCommand
       [string]$cmdname
    )
    return [bool](Get-Command -Name $cmdname -ErrorAction SilentlyContinue)
-}
-
-function UpdateStoreApps
-{
-   $wmiObj = Get-WmiObject -Namespace "root\cimv2\mdm\dmmap" -Class "MDM_EnterpriseModernAppManagement_AppManagement01"
-   $wmiObj.UpdateScanMethod() | Out-Null
-   Start-Sleep -Seconds 30
-   Remove-Variable wmiObj
 }
 
 function RefreshEnv
@@ -59,38 +51,17 @@ function AddToUserPathAndRefresh
    RefreshEnv
 }
 
-function IsWindows10
-{
-   return([System.Environment]::OSVersion.Version.Build -lt 22000)
-}
-
 # Prompt the user
 Write-Host "!! IMPORTANT !!" -ForegroundColor "Red"
 Read-Host -Prompt "This script requires user input and GUI interaction -- Press Return to continue after system is ready"
 
-# Do we have winget yet?
-while(-not (CheckCommand -cmdname 'winget'))
-{
-   Write-Host "Trying to update the Microsoft Store to get winget..." -ForegroundColor "Green"
-   UpdateStoreApps   # has a built-in sleep
-}
-
 # Dependencies needed to continue
 Write-Host "Installing dependencies..." -ForegroundColor "Green"
-if(CheckCommand -cmdname 'scoop')
-{
-   # 1password-cli is currently not available in winget
-   scoop install 1password-cli 6>&1 | Out-Null
-}
-else
-{
-   Write-Host "!! Exiting: Scoop not installed or not in path !!" -ForegroundColor "Red"
-   Return 1
-}
 
 if(CheckCommand -cmdname 'winget')
 {
    winget install AgileBits.1Password --silent --accept-source-agreements --accept-package-agreements | Out-Null
+   winget install AgileBits.1Password.CLI --silent --accept-source-agreements --accept-package-agreements | Out-Null
    winget install GnuPG.GnuPG --silent --accept-source-agreements --accept-package-agreements | Out-Null
    winget install SyncTrayzor.SyncTrayzor --silent --accept-source-agreements --accept-package-agreements | Out-Null
 }
@@ -113,17 +84,17 @@ if(-not $strap_op_uri)
 {
    $strap_op_uri = Read-Host -Prompt "Please enter a 1Password signup URI or press Return to setup manually"
 }
-Write-Host "Press Return to continue AFTER 1Password is setup -- Sign in and enable CLI under Developer settings" -ForegroundColor "Red"
+Write-Host "Press Return to continue AFTER 1Password is setup -- Sign in and enable CLI and SSH-Agent under Developer settings" -ForegroundColor "Red"
 Start-Sleep -Seconds 2
 if($strap_op_uri)
 {
-   Start-Process -Filepath "$env:LOCALAPPDATA\1Password\app\8\1Password.exe" -Args "$strap_op_uri" -RSO "$env:LOCALAPPDATA/Temp/1pass1.txt" -RSE "$env:LOCALAPPDATA/Temp/1pass2.txt"
+   Start-Process -Filepath "$env:PROGRAMFILES\1Password\app\8\1Password.exe" -Args "$strap_op_uri" -RSO "$env:LOCALAPPDATA/Temp/1pass1.txt" -RSE "$env:LOCALAPPDATA/Temp/1pass2.txt"
 }
 else
 {
-   Start-Process -Filepath "$env:LOCALAPPDATA\1Password\app\8\1Password.exe" -RSO "$env:LOCALAPPDATA/Temp/1pass1.txt" -RSE "$env:LOCALAPPDATA/Temp/1pass2.txt"
+   Start-Process -Filepath "$env:PROGRAMFILES\1Password\app\8\1Password.exe" -RSO "$env:LOCALAPPDATA/Temp/1pass1.txt" -RSE "$env:LOCALAPPDATA/Temp/1pass2.txt"
 }
-Read-Host -Prompt "Is 1Password CLI enabled? Press Return to continue"
+Read-Host -Prompt "Is 1Password CLI and SSH-Agent enabled? Press Return to continue"
 
 # Setup GnuPG (initialize our keyring if needed)
 gpg --list-keys | Out-Null
@@ -215,36 +186,17 @@ if(-not (Test-Path "$HOME\.sync\.first-sync"))
 # Write-Host "Enabling Hardware-Accelerated GPU Scheduling..." -ForegroundColor "Green"
 # New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\" -Name 'HwSchMode' -Value '2' -PropertyType DWORD -Force
 
-# Setup Git
-Write-Host "Setup Git..." -ForegroundColor "Green"
-
-# Get rid of scoop's git and get it from winget instead
-scoop uninstall git -p 6>&1 | Out-Null
-Copy-Item -Path "$HOME\.dotfiles\script\strap-support\git.inf" -Destination "C:\git.inf" -Force
-$git_install_inf = "C:\git.inf"
-$git_install_args = "/SP- /VERYSILENT /SUPPRESSMSGBOXES /NOCANCEL /NORESTART /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /LOADINF=""$git_install_inf"""
-winget install Git.Git --override "$git_install_args" | Out-Null
-Remove-Item -Path "C:\git.inf" -Force
-RefreshEnv
-
-# Squelch git 2.x warning message when pushing
-if(-not (git config --system push.default))
-{
-   git config --system push.default simple
-}
-
-# Never modify line-endings
-git config --system core.autocrlf off
-
 # Point git at the installed GnuPG
 git config --system gpg.program "C:/Program Files (x86)/gnupg/bin/gpg"
 
 # Setup SSH
 Write-Host "Setup SSH..." -ForegroundColor "Green"
 
-# By default the ssh-agent service is disabled. Configure it to start automatically.
-Get-Service ssh-agent | Set-Service -StartupType Automatic
-Start-Service ssh-agent
+# Disable the Microsoft OpenSSH ssh-agent service. We want to use the SSH agent built into 1Password.
+Get-Service ssh-agent | Set-Service -StartupType Disabled
+Stop-Service ssh-agent
+
+# Enable and start the Microsoft OpenSSH server
 Get-Service sshd | Set-Service -StartupType Automatic
 Start-Service sshd
 
@@ -268,15 +220,9 @@ if(Get-Command -cmdname 'pwsh')
    pwsh -Command {Update-Help -UICulture en-US -Force -ErrorAction SilentlyContinue}
 }
 
-# Remove installed Apps that came back after Windows updated
-if(Test-Path "$HOME\.dotfiles\bin\remove-windows-apps.ps1")
-{
-   & "$HOME\.dotfiles\bin\remove-windows-apps.ps1"
-}
-
 # Install Rotz
 Write-Host "Setup Rotz..." -ForegroundColor "Green"
-scoop install 7zip 6>&1 | Out-Null
+winget install 7zip.7zip 6>&1 | Out-Null
 if(-not (Test-Path "$HOME\.dotfiles\script\strap-support\rotz-windows.7z"))
 {
    Write-Host "!! Exiting: Missing strap support files !!" -ForegroundColor "Red"
