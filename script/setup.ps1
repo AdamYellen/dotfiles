@@ -77,7 +77,7 @@ if(Test-Path -Path "$HOME\.ssh")
     Remove-Item "$HOME\.ssh" -Force | Out-Null
 }
 New-Item -ItemType SymbolicLink -Path "$HOME\.ssh" -Target "$HOME\.dotfiles\ssh" | Out-Null
-Add-WindowsCapability -Online -Name OpenSSH.Server*
+Add-WindowsCapability -Online -Name OpenSSH.Server* | Out-Null
 
 # setup GPG
 if(Test-Path -Path "$env:APPDATA\gnupg")
