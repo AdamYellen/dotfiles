@@ -1,13 +1,22 @@
+Host diskstation.i.yellen.net
+  User yellen
+
+Host jabbasnot.rat-eagle.ts.net
+  User pi
+
+Host 192.168.1.1 unifi.i.yellen.net
+  User root
+
 Host *
   IgnoreUnknown AddKeysToAgent,UseKeychain
 
-Match exec "host-is-darwin"
-		Include config.d/darwin
+Match exec host-is-darwin
+	Include config.d/darwin
 
-Match exec "host-is-linux"
-		Include config.d/linux
+Match exec host-is-linux
+	Include config.d/linux
 
-Match exec "host-is-windows"
+Match exec host-is-windows
 	Include config.d/windows
 
 Host *.github.com *.github.net *.githubapp.com
@@ -16,13 +25,14 @@ Host *.github.com *.github.net *.githubapp.com
 
 Host github-codespaces
 	User root
-	Hostname localhost
+	HostName localhost
 	Port 2222
 
 Host *
 	StrictHostKeyChecking ask
 	VerifyHostKeyDNS ask
 	NoHostAuthenticationForLocalhost yes
-	IdentityFile ~/.ssh/id_ed25519
-	IdentityFile ~/.ssh/id_rsa
-	AddKeysToAgent yes
+#    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+#	IdentityFile ~/.ssh/id_ed25519
+#	IdentityFile ~/.ssh/id_rsa
+#	AddKeysToAgent yes
