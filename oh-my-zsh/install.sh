@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 # Install/update oh-my-zsh
 if ! [ -d "$HOME/.oh-my-zsh" ]
 then

@@ -1,5 +1,5 @@
 darwin:
-  installs: install.sh
+  installs: "{{ config.dotfiles }}/{{ name }}/install.sh"
 
 windows:
-  installs: install.ps1
+  installs: "{{ config.dotfiles }}/{{ name }}/install.ps1"

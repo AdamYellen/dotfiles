@@ -1,11 +1,11 @@
 linux:
   links:
-    vscode-settings.json: $HOME/.config/Code/User/settings.json
+    vscode-settings.json: ~/.config/Code/User/settings.json
 
 darwin:
   installs: brew install visual-studio-code
   links:
-    vscode-settings.json: $HOME/Library/Application\ Support/Code/User/settings.json
+    vscode-settings.json: ~/Library/Application\ Support/Code/User/settings.json
 
 windows:
   installs: winget install Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements | Out-Null

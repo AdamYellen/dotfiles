@@ -1,6 +1,4 @@
 $OP_ACCOUNT="yellen.1password.com"
-$ID_SSH_ID_ED25519="nfkdxt2flzr7c726zvzsyyh5ey"
-$ID_SSH_ID_RSA="5np3yatctxub642ufy3xu5vsue"
 $ID_GNUPG_PRIVATE="arsatc7yulxzaf33anloj6wrle"
 $ID_SECRETS="j7dcx5ksiylxsj4dkopyntmvpq"
 $MAX_RETRIES=10
@@ -64,8 +62,6 @@ function onepassword_get() {
 
 Write-Host "Logging in to 1Password..." -ForegroundColor "Green"
 if (onepassword_login($OP_ACCOUNT)) {
-   onepassword_get -account $OP_ACCOUNT -secret_id $ID_SSH_ID_ED25519 -secret_output ".ssh\id_ed25519" | Out-Null
-   onepassword_get -account $OP_ACCOUNT -secret_id $ID_SSH_ID_RSA -secret_output ".ssh\id_rsa" | Out-Null
    onepassword_get -account $OP_ACCOUNT -secret_id $ID_GNUPG_PRIVATE -secret_output ".gnupg/6933682+AdamYellen@users.noreply.github.com.private.gpg-key" | Out-Null
    onepassword_get -account $OP_ACCOUNT -secret_id $ID_SECRETS -secret_output ".secrets" | Out-Null
 }
