@@ -1,2 +1,10 @@
 global:
   installs: false
+
+darwin:
+  links:
+    zshenv.zsh: ~/.zshenv
+    zsh/.zshrc: ~/.zsh/.zshrc
+    zsh/.zprofile: ~/.zsh/.zprofile
+    zsh/zsh-aliases: ~/.zsh/zsh-aliases
+    zsh/zsh-functions: ~/.zsh/zsh-functions
