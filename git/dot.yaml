@@ -4,9 +4,13 @@ global:
 darwin:
   links:
     gitconfig: ~/.gitconfig
+    gitconfig.gitea: ~/.gitconfig.gitea
+    gitconfig.github: ~/.gitconfig.github
     gitignore: ~/.gitignore
 
 windows:
   links:
     gitconfig: ~/.gitconfig
+    gitconfig.gitea: ~/.gitconfig.gitea
+    gitconfig.github: ~/.gitconfig.github
     gitignore: ~/.gitignore

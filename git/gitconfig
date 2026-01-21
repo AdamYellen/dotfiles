@@ -1,10 +1,8 @@
-[user]
-	# Name used in commit messages.
-	name = Adam Yellen
-	# Email used in commit messages.
-	email = 6933682+AdamYellen@users.noreply.github.com
-	# Key used to sign commit messages.
-	signingkey = D0E1D6E238572F90
+[includeIf "hasconfig:remote.*.url:*github.com/**"]
+	path = .gitconfig.github
+[includeIf "hasconfig:remote.*.url:https://gitea.i.yellen.net/**"]
+	path = .gitconfig.gitea
+
 [github]
 	# GitHub username for command-line tools.
 	user = AdamYellen
@@ -209,10 +207,10 @@
 	# Show the diff as a comment in the commit message template.
 	verbose = true
 	# Sign commits with GPG
-	gpgsign = true
+	#gpgsign = true
 [gpg]
 	# Use my custom dotfiles Codespaces GPG helper.
-	program = git-gpg-dotfiles
+	#program = git-gpg-dotfiles
 [tag]
 	# Sort tags by newest first
 	sort = -version:refname

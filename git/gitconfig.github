@@ -1,0 +1,7 @@
+[user]
+	# Name used in commit messages.
+	name = Adam Yellen
+	# Email used in commit messages.
+	email = 6933682+AdamYellen@users.noreply.github.com
+	# Key used to sign commit messages.
+	signingkey = D0E1D6E238572F90

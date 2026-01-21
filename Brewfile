@@ -6,6 +6,45 @@ tap "homebrew/cask-fonts"
 tap "homebrew/services"
 # tap "buo/cask-upgrade"
 
+
+==> Formulae
+ansible
+ansible-lint
+bat
+eza
+fzf
+starship
+
+==> Casks
+1password
+1password-cli
+autodesk-fusion
+balenaetcher
+discord
+firefox
+font-inconsolata-for-powerline
+font-inconsolata-nerd-font
+google-chrome
+halloy
+itsycal
+knockknock
+localsend
+obsidian
+orcaslicer
+pearcleaner
+philips-hue-sync
+raycast
+soundsource
+stats
+steam
+suspicious-package
+syncthing
+tailscale
+tor-browser
+visual-studio-code
+warp
+xpipe
+
 ######################## Brews ########################################################
 # Disk Usage/Free Utility - a better 'df' alternative
 brew "duf"

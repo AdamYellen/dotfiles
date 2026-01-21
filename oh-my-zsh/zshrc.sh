@@ -78,7 +78,11 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
-export PATH="$PATH:$HOME/.cargo/bin:$HOME/.bin"
+export PATH="$PATH:$HOME/.bin"
+if [ -d "$HOME/.cargo/bin" ]
+then
+   export PATH="$PATH:$HOME/.cargo/bin"
+fi
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8

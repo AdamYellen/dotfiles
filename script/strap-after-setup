@@ -70,3 +70,28 @@ cargo install rotz
 ~/.cargo/bin/rotz link -f
 ~/.cargo/bin/rotz -d ~/.sync install
 ~/.cargo/bin/rotz -d ~/.sync link -f
+
+# MacOS tweaks
+##################################################################
+
+# Decrease Dock auto-hide delay
+defaults write com.apple.dock "autohide-delay" -float "0.05"
+
+# Show hidden files in Finder
+defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
+
+# Show path in Finder
+defaults write com.apple.finder "ShowPathbar" -bool "true"
+
+# Default to list view in Finder
+defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
+
+# Default search scope to current folder in Finder
+defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
+
+# Show hard disks on Desktop
+defaults write com.apple.finder "ShowHardDrivesOnDesktop" -bool "true"
+
+# Don't create .DS_Store files on network shares
+defaults write com.apple.desktopservices DSDontWriteNetworkStores "true"
+

@@ -1,6 +1,3 @@
-Host diskstation.i.yellen.net
-  User yellen
-
 Host jabbasnot.rat-eagle.ts.net
   User pi
 
@@ -28,11 +25,14 @@ Host github-codespaces
 	HostName localhost
 	Port 2222
 
+Host gitea.i.yellen.net
+	ForwardAgent no
+	User yellen
+
+Host *.yellen.net *.rat-eagle.ts.net
+	ForwardAgent yes
+
 Host *
 	StrictHostKeyChecking ask
 	VerifyHostKeyDNS ask
 	NoHostAuthenticationForLocalhost yes
-#    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-#	IdentityFile ~/.ssh/id_ed25519
-#	IdentityFile ~/.ssh/id_rsa
-#	AddKeysToAgent yes

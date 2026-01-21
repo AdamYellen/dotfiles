@@ -6,3 +6,6 @@ alias plistbuddy="/usr/libexec/PlistBuddy"
 
 # Short to iCloud Drive folder
 alias icloud="cd $HOME/Library/Mobile\ Documents/com\~apple\~CloudDocs"
+
+# Flush DNS cache on macOS
+alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
