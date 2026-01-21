@@ -71,6 +71,11 @@ cargo install rotz
 ~/.cargo/bin/rotz -d ~/.sync install
 ~/.cargo/bin/rotz -d ~/.sync link -f
 
+# Normalize 1Password paths across MacOS and Linux
+mkdir -p ~/.1password
+ln -s ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
+ln -s /opt/homebrew/bin/op /usr/local/bin/op
+
 # MacOS tweaks
 ##################################################################
 
@@ -94,4 +99,3 @@ defaults write com.apple.finder "ShowHardDrivesOnDesktop" -bool "true"
 
 # Don't create .DS_Store files on network shares
 defaults write com.apple.desktopservices DSDontWriteNetworkStores "true"
-

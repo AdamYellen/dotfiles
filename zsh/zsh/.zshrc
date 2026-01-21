@@ -50,9 +50,9 @@ export PYTHON_HISTORY="$HOME/.cache/.python_history"
 # Setup 1Password SSH agent
 if [[ -d "/Applications/1Password.app" ]]
 then
+   # Only set if it hasn't already been set, typically this would be the case if connecting remotely via SSH
    if [[ -z "$SSH_AUTH_SOCK" ]]
    then
       export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
    fi
 fi
-

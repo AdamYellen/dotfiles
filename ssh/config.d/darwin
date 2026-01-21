@@ -1,11 +1,4 @@
+# If we are connecting remotely via SSH we want to utilize agent forwarding via SSH_AUTH_SOCK, otherwise setup IdentityAgent to point to the local 1Password app
 Match host * exec "test -z $SSH_TTY"
     UseKeychain yes
     IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-
-#Host *
-#    UseKeychain yes
-#    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-##    ControlMaster auto
-##    ControlPath /tmp/ssh-%r@%h:%p.socket
-##	PubkeyAcceptedKeyTypes=+ssh-rsa
-##	HostKeyAlgorithms=+ssh-rsa
