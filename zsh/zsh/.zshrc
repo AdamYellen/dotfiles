@@ -11,8 +11,8 @@ fi
 
 # Paths
 typeset -U path                  # Make sure path entries are unique
-path+=~/.bin
-# path=(~/bin ~/progs/bin $path)
+# path+=~/.bin
+path=(~/.bin $path)
 
 # Options
 setopt AUTO_CD                   # If only directory path is entered, cd there
@@ -47,21 +47,6 @@ compinit
 export LESSHISTFILE="$HOME/.cache/.lesshst"
 export PYTHON_HISTORY="$HOME/.cache/.python_history"
 
-# Setup 1Password SSH agent
-#if [[ -d "/Applications/1Password.app" ]]
-#then
-#   # Only set if it hasn't already been set, typically this would be the case if connecting remotely via SSH
-#   if [[ -z "$SSH_AUTH_SOCK" ]]
-#   then
-#      export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
-#   fi
-#fi
-
-#if [[ -z "$LC_DESKTOP_HOST" ]]
-#then
-#   export LC_DESKTOP_HOST=`hostname`
-#fi
-
 ##
 # Set environment for using 1Password SSH Agent and CLI over SSH such
 # that SSH Agent and 1Password CLI can be forwarded over SSH sessions
@@ -88,16 +73,10 @@ export PYTHON_HISTORY="$HOME/.cache/.python_history"
 # When logged in remotely over SSH, use `op_over_ssh` wrapper for `op`.
 if [[ -z "$SSH_CONNECTION" ]]
 then
-    SSH_AUTH_SOCK="$HOME/.1password/agent.sock"; export SSH_AUTH_SOCK
-    if command -v op > /dev/null
+    export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+    if command -v /usr/local/bin/op > /dev/null
     then
         # if running locally and 1Password CLI is available set LC_DESKTOP_HOST
-        LC_DESKTOP_HOST=$(hostname); export LC_DESKTOP_HOST
-    fi
-else
-    if [[ -n "$LC_DESKTOP_HOST" && "$LC_DESKTOP_HOST" != "$(hostname)" ]]
-    then
-        # not running locally and LC_DESKTOP_HOST is defined, execute op over SSH to desktop host
-        alias op=op_over_ssh
+        export LC_DESKTOP_HOST=$(hostname)
     fi
 fi

@@ -1,0 +1,17 @@
+if [[ -n "$TMUX" ]]; then
+   # update shell's LC_DESKTOP_HOST from tmux session
+   eval $(tmux showenv -s LC_DESKTOP_HOST)
+fi
+
+if [[ -n "$SSH_CONNECTION" ]]
+then
+   if [[ -n "$LC_DESKTOP_HOST" && "$LC_DESKTOP_HOST" != "$(hostname)" ]]; then
+      # not running locally and LC_DESKOP_HOST is defined, execute op over SSH to desktop host
+      #ssh $LC_DESKTOP_HOST /usr/local/bin/op $*
+      ssh ${SSH_CLIENT%% *} /usr/local/bin/op $*
+   else
+      /usr/local/bin/op $*
+   fi
+else
+   /usr/local/bin/op $*
+fi
