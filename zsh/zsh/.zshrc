@@ -48,19 +48,19 @@ export LESSHISTFILE="$HOME/.cache/.lesshst"
 export PYTHON_HISTORY="$HOME/.cache/.python_history"
 
 # Setup 1Password SSH agent
-if [[ -d "/Applications/1Password.app" ]]
-then
-   # Only set if it hasn't already been set, typically this would be the case if connecting remotely via SSH
-   if [[ -z "$SSH_AUTH_SOCK" ]]
-   then
-      export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
-   fi
-fi
+#if [[ -d "/Applications/1Password.app" ]]
+#then
+#   # Only set if it hasn't already been set, typically this would be the case if connecting remotely via SSH
+#   if [[ -z "$SSH_AUTH_SOCK" ]]
+#   then
+#      export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+#   fi
+#fi
 
-if [[ -z "$LC_DESKTOP_HOST" ]]
-then
-   export LC_DESKTOP_HOST=`hostname`
-fi
+#if [[ -z "$LC_DESKTOP_HOST" ]]
+#then
+#   export LC_DESKTOP_HOST=`hostname`
+#fi
 
 ##
 # Set environment for using 1Password SSH Agent and CLI over SSH such
@@ -92,7 +92,7 @@ then
     if command -v op > /dev/null
     then
         # if running locally and 1Password CLI is available set LC_DESKTOP_HOST
-        LC_DESKTOP_HOST=$(hostname -s); export LC_DESKTOP_HOST
+        LC_DESKTOP_HOST=$(hostname); export LC_DESKTOP_HOST
     fi
 else
     if [[ -n "$LC_DESKTOP_HOST" && "$LC_DESKTOP_HOST" != "$(hostname)" ]]

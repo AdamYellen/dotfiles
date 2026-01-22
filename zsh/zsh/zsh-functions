@@ -32,7 +32,7 @@ function zsh_add_completion() {
 
 # Wrapper to execute `op` over ssh to the host where 1Password is running.
 function op_over_ssh() {
-    if [[ -n "$TMUX" ]]then
+    if [[ -n "$TMUX" ]]; then
         # update shell's LC_DESKTOP_HOST from tmux session
         eval $(tmux showenv -s LC_DESKTOP_HOST)
     fi
