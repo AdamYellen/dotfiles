@@ -1,8 +1,0 @@
-global:
-  installs: false
-
-darwin:
-  installs: "{{ config.dotfiles }}/{{ name }}/install.sh"
-  links:
-    oh-my-zsh-custom: ~/.oh-my-zsh-custom
-    zshrc.sh: ~/.zshrc
