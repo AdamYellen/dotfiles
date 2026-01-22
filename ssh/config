@@ -1,11 +1,5 @@
-Host jabbasnot.rat-eagle.ts.net
-  User pi
-
-Host 192.168.1.1 unifi.i.yellen.net
-  User root
-
 Host *
-  IgnoreUnknown AddKeysToAgent,UseKeychain
+	IgnoreUnknown AddKeysToAgent,UseKeychain
 
 Match exec host-is-darwin
 	Include config.d/darwin
@@ -25,14 +19,10 @@ Host github-codespaces
 	HostName localhost
 	Port 2222
 
-Host gitea.i.yellen.net
-	ForwardAgent no
-	User yellen
-
-Host *.yellen.net *.rat-eagle.ts.net
-	ForwardAgent yes
-
 Host *
+	Include ~/.sync/sshconfig
 	StrictHostKeyChecking ask
 	VerifyHostKeyDNS ask
 	NoHostAuthenticationForLocalhost yes
+
+
