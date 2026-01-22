@@ -11,7 +11,6 @@ fi
 
 # Paths
 typeset -U path                  # Make sure path entries are unique
-# path+=~/.bin
 path=(~/.bin $path)
 
 # Options
@@ -80,3 +79,9 @@ then
         export LC_DESKTOP_HOST=$(hostname)
     fi
 fi
+
+# Load fancy prompt
+source "$HOME/.dotfiles/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S')
+AGKOZAK_PROMPT_CHAR=( ❯ ❯ ❮ )
+AGKOZAK_COLORS_PROMPT_CHAR='magenta'
