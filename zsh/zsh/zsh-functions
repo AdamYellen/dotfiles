@@ -29,3 +29,17 @@ function zsh_add_completion() {
 	completion_file="$(basename "${completion_file_path}")"
 	if [ "$2" = true ] && compinit "${completion_file:1}"
 }
+
+# Wrapper to execute `op` over ssh to the host where 1Password is running.
+function op_over_ssh() {
+    if [[ -n "$TMUX" ]]then
+        # update shell's LC_DESKTOP_HOST from tmux session
+        eval $(tmux showenv -s LC_DESKTOP_HOST)
+    fi
+    if [[ -n "$LC_DESKTOP_HOST" && "$LC_DESKTOP_HOST" != "$(hostname)" ]]; then
+        # not running locally and LC_DESKOP_HOST is defined, execute op over SSH to desktop host
+        ssh $LC_DESKTOP_HOST /usr/local/bin/op $*
+    else
+        /usr/local/bin/op $*
+    fi
+}

@@ -56,3 +56,48 @@ then
       export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
    fi
 fi
+
+if [[ -z "$LC_DESKTOP_HOST" ]]
+then
+   export LC_DESKTOP_HOST=`hostname`
+fi
+
+##
+# Set environment for using 1Password SSH Agent and CLI over SSH such
+# that SSH Agent and 1Password CLI can be forwarded over SSH sessions
+# consistently on macOS and Linux.
+#
+# See: https://github.com/mmercurio/dotfiles
+#
+# Requirements:
+# - ~/.1password/agent.sock is symlinked to 1Password's SSH Agent socket.
+#   (This is the default for Linux, but not not macOS.)
+# - ~/bin/op is symlinked to 1Password CLI
+# - ~/.ssh/config includes option to send LC_DESKTOP_HOST ("SendEnv LC_DESKTOP_HOST")
+#
+# This file is expected to be sourced by the login shell.
+#
+# When logged in locally on the desktop:
+# - SSH_AUTH_SOCK is set and pointing to 1Password's ssh-agent socket.
+# - LC_DESKTOP_HOST is set to the current hostname where 1Password is running.
+#
+# When logged in remotely over SSH:
+# - `op` is aliased to run over SSH to the desktop where 1Password is running.
+#
+# When not logged in remotely over SSH, set SSH_AUTH_SOCK to use 1Password as SSH Agent.
+# When logged in remotely over SSH, use `op_over_ssh` wrapper for `op`.
+if [[ -z "$SSH_CONNECTION" ]]
+then
+    SSH_AUTH_SOCK="$HOME/.1password/agent.sock"; export SSH_AUTH_SOCK
+    if command -v op > /dev/null
+    then
+        # if running locally and 1Password CLI is available set LC_DESKTOP_HOST
+        LC_DESKTOP_HOST=$(hostname -s); export LC_DESKTOP_HOST
+    fi
+else
+    if [[ -n "$LC_DESKTOP_HOST" && "$LC_DESKTOP_HOST" != "$(hostname)" ]]
+    then
+        # not running locally and LC_DESKTOP_HOST is defined, execute op over SSH to desktop host
+        alias op=op_over_ssh
+    fi
+fi
