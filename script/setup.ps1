@@ -76,7 +76,7 @@ if(Test-Path -Path "$HOME\.ssh")
 {
     Remove-Item "$HOME\.ssh" -Force | Out-Null
 }
-New-Item -ItemType SymbolicLink -Path "$HOME\.ssh" -Target "$HOME\.dotfiles\ssh" | Out-Null
+New-Item -ItemType SymbolicLink -Path "$HOME\.ssh" -Target "$HOME\.dotfiles\ssh\.ssh" | Out-Null
 Add-WindowsCapability -Online -Name OpenSSH.Server* | Out-Null
 
 # setup GPG
@@ -84,19 +84,19 @@ if(Test-Path -Path "$env:APPDATA\gnupg")
 {
     Remove-Item "$env:APPDATA\gnupg" -Force | Out-Null
 }
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\gnupg" -Target "$HOME\.dotfiles\gnupg" | Out-Null
+New-Item -ItemType SymbolicLink -Path "$env:APPDATA\gnupg" -Target "$HOME\.dotfiles\gnupg\.gnupg" | Out-Null
 if(Test-Path -Path "$HOME\.gnupg")
 {
     Remove-Item "$HOME\.gnupg" -Force | Out-Null
 }
-New-Item -ItemType SymbolicLink -Path "$HOME\.gnupg" -Target "$HOME\.dotfiles\gnupg" | Out-Null
+New-Item -ItemType SymbolicLink -Path "$HOME\.gnupg" -Target "$HOME\.dotfiles\gnupg\.gnupg" | Out-Null
 
 # setup bin
 if(Test-Path -Path "$HOME\.bin")
 {
     Remove-Item "$HOME\.bin" -Force | Out-Null
 }
-New-Item -ItemType SymbolicLink -Path "$HOME\.bin" -Target "$HOME\.dotfiles\bin" | Out-Null
+New-Item -ItemType SymbolicLink -Path "$HOME\.bin" -Target "$HOME\.dotfiles\bin\.bin" | Out-Null
 
 # setup other directories
 New-Item -Path "$HOME\Projects" -ItemType Directory -Force | Out-Null

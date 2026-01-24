@@ -11,17 +11,19 @@ DOTFILESDIRREL=$(dirname $SCRIPTSETUP)
 cd $DOTFILESDIRREL/..
 DOTFILESDIR=$(pwd -P)
 
+# Setup bare minimum dotfile symlinks for Strap process
+# The rest will be later handled by stow
 # setup SSH
 rm -rf "$HOME/.ssh"
-ln -sv "$DOTFILESDIR/ssh/" "$HOME/.ssh"
+ln -sv "$DOTFILESDIR/ssh/.ssh" "$HOME/.ssh"
 
 # setup GPG
 rm -rf "$HOME/.gnupg"
-ln -sv "$DOTFILESDIR/gnupg/" "$HOME/.gnupg"
+ln -sv "$DOTFILESDIR/gnupg/.gnupg" "$HOME/.gnupg"
 
 # setup bin
 rm -rf "$HOME/.bin"
-ln -sv "$DOTFILESDIR/bin/" "$HOME/.bin"
+ln -sv "$DOTFILESDIR/bin/.bin" "$HOME/.bin"
 
 # Use our minimal Brewfile
 ln -sfv "$DOTFILESDIR/Brewfile.strap-deps" "$HOME/.Brewfile"
