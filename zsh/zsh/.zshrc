@@ -46,6 +46,9 @@ compinit
 export LESSHISTFILE="$HOME/.cache/.lesshst"
 export PYTHON_HISTORY="$HOME/.cache/.python_history"
 
+# Configure Homebrew
+export HOMEBREW_AUTO_UPDATE_SECS=604800
+
 ##
 # Set environment for using 1Password SSH Agent and CLI over SSH such
 # that SSH Agent and 1Password CLI can be forwarded over SSH sessions

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# TODO: Add support for Windows
+
+# Setup my home directory how I like it
+mkdir -p ~/Projects
+
+# Run OS-specific setup script
+if [ "$HOME/.bin/host-darwin" ]
+then
+   if [ -x "$HOME/.bin/update-host-darwin" ]
+   then
+      "$HOME/.bin/update-host-darwin"
+   fi
+elif [ "$HOME/.bin/host-linux" ]
+then
+   if [ -x "$HOME/.bin/update-host-linux" ]
+   then
+      "$HOME/.bin/update-host-linux"
+   fi
+fi
+exit 0

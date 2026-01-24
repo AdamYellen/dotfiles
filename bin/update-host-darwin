@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Update Homebrew
+brew update -q
+
+# script/install-vscode-extensions
+
+# Enable TouchID for sudo
+brew install -q artginzburg/tap/sudo-touchid
+
+# Install our fonts
+# AY: maybe add to Brewfile instead
+# brew install $( brew search font | grep -e meslo -e for-powerline | tr '\n' ' ' )
+
+# Normalize 1Password paths across MacOS and Linux
+mkdir -p ~/.1password
+ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
+ln -sf /opt/homebrew/bin/op /usr/local/bin/op
+
+
+# MacOS tweaks
+##################################################################
+
+# Ensure auto-update is always enabled
+sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate true
+
+# Decrease Dock auto-hide delay
+defaults write com.apple.dock "autohide-delay" -float "0.05"
+
+# Show hidden files in Finder
+defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
+
+# Show path in Finder
+defaults write com.apple.finder "ShowPathbar" -bool "true"
+
+# Default to list view in Finder
+defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
+
+# Default search scope to current folder in Finder
+defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
+
+# Show hard disks on Desktop
+defaults write com.apple.finder "ShowHardDrivesOnDesktop" -bool "true"
+
+# Show the Quit option in Finder
+defaults write com.apple.finder "QuitMenuItem" -bool "true"
+
+# Don't create .DS_Store files on network shares
+defaults write com.apple.desktopservices DSDontWriteNetworkStores "true"
+
+# Restart Finder
+killall Finder

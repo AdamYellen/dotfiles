@@ -48,54 +48,8 @@ then
   exit 1
 fi
 
-# Setup my home directory how I like it
-mkdir -pv ~/Projects
-
-# script/install-vscode-extensions
-
-bin/touchid-enable-pam-sudo
-
-# Ensure auto-update is always enabled
-# sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate 1
-
-# Install our fonts
-# AY: maybe add to Brewfile instead
-# brew install $( brew search font | grep -e meslo -e for-powerline | tr '\n' ' ' )
-
-# Install Rotz
-cargo install rotz
-
-# Go Rotz
-~/.cargo/bin/rotz install
-~/.cargo/bin/rotz link -f
-~/.cargo/bin/rotz -d ~/.sync install
-~/.cargo/bin/rotz -d ~/.sync link -f
-
-# Normalize 1Password paths across MacOS and Linux
-mkdir -p ~/.1password
-ln -s ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
-ln -s /opt/homebrew/bin/op /usr/local/bin/op
-
-# MacOS tweaks
-##################################################################
-
-# Decrease Dock auto-hide delay
-defaults write com.apple.dock "autohide-delay" -float "0.05"
-
-# Show hidden files in Finder
-defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
-
-# Show path in Finder
-defaults write com.apple.finder "ShowPathbar" -bool "true"
-
-# Default to list view in Finder
-defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
-
-# Default search scope to current folder in Finder
-defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
-
-# Show hard disks on Desktop
-defaults write com.apple.finder "ShowHardDrivesOnDesktop" -bool "true"
-
-# Don't create .DS_Store files on network shares
-defaults write com.apple.desktopservices DSDontWriteNetworkStores "true"
+# Run our regular host update script
+if [ -x "$HOME/.bin/update-host" ]
+then
+  "$HOME/.bin/update-host"
+fi
