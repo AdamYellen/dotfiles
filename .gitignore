@@ -1,17 +1,3 @@
-/ssh/id_*
-/ssh/id_rsa
-/ssh/*_rsa*
-/ssh/known_hosts
-/gnupg/*.d/
-/gnupg/*.db
-/gnupg/*.gpg
-/gnupg/*.kbx
-/gnupg/*.kb_
-/gnupg/*.private.*
-/gnupg/*.lock
-/gnupg/.*
-/gnupg/gpg-agent.conf
-/gnupg/sshcontrol
 bundle/cache
 secrets
 rbenv/*/
