@@ -1,6 +1,6 @@
 [includeIf "hasconfig:remote.*.url:*github.com/**"]
 	path = .gitconfig.github
-[includeIf "hasconfig:remote.*.url:https://gitea.i.yellen.net/**"]
+[includeIf "hasconfig:remote.*.url:https://gitea.*.yellen.net/**"]
 	path = .gitconfig.gitea
 
 [github]
