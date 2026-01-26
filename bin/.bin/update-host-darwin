@@ -15,8 +15,12 @@ brew install -q artginzburg/tap/sudo-touchid
 # Normalize 1Password paths across MacOS and Linux
 mkdir -p ~/.1password
 ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock
-ln -sf /opt/homebrew/bin/op /usr/local/bin/op
-
+if command -v /opt/homebrew/bin/op >/dev/null
+then
+   # On MacOS Apple Silicon, Homebrew is installed under /opt/homebrew, make link to /usr/local
+   # On MacOS Intel, Homebrew is already installed under /usr/local
+   ln -sf /opt/homebrew/bin/op /usr/local/bin/op
+fi
 
 # MacOS tweaks
 ##################################################################
