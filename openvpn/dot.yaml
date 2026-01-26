@@ -1,5 +1,0 @@
-darwin:
-  installs: brew install openvpn-connect
-
-windows:
-  installs: install-winget OpenVPNTechnologies.OpenVPNConnect

@@ -1,2 +1,0 @@
-darwin:
-  installs: brew install homebrew/cask-versions/safari-technology-preview

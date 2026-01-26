@@ -84,7 +84,7 @@ then
 fi
 
 # Load fancy prompt
-source "$HOME/.dotfiles/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+source "$HOME/.config/zsh/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S')
 AGKOZAK_PROMPT_CHAR=( ❯ ❯ ❮ )
 AGKOZAK_COLORS_PROMPT_CHAR='magenta'

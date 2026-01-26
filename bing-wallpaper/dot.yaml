@@ -1,3 +1,0 @@
-windows:
-  installs:
-    winget install Microsoft.BingWallpaper

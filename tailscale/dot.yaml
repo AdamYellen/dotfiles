@@ -1,5 +1,0 @@
-darwin:
-  installs: brew install homebrew/cask/tailscale
-
-windows:
-  installs: winget install tailscale.tailscale --silent --accept-source-agreements --accept-package-agreements | Out-Null

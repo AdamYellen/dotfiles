@@ -1,9 +1,0 @@
-global:
-  installs: false
-
-darwin:
-  links:
-    .zshenv: ~/.zshenv
-    zsh/.zshrc: ~/.config/zsh/.zshrc
-    zsh/.zprofile: ~/.config/zsh/.zprofile
-    zsh/zsh-functions: ~/.config/zsh/zsh-functions

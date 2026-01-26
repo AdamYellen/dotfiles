@@ -1,2 +1,0 @@
-windows:
-  installs: winget install Microsoft.PowerToys --silent --accept-source-agreements --accept-package-agreements | Out-Null

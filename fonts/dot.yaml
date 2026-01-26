@@ -1,5 +1,0 @@
-darwin:
-  installs: "{{ config.dotfiles }}/{{ name }}/install.sh"
-
-windows:
-  installs: "{{ config.dotfiles }}/{{ name }}/install.ps1"

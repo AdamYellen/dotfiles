@@ -1,2 +1,0 @@
-darwin:
-  installs: brew install suspicious-package

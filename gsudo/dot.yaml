@@ -1,3 +1,0 @@
-windows:
-  installs:
-    install-winget -packageName gerardog.gsudo
