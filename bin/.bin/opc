@@ -1,0 +1,74 @@
+#!/bin/bash
+# Lookup 1Password Connect secrets, checks the Connect server connection, if working set variables and pass through cli args, otherwise just pass through cli args.
+#
+# Prereqs:
+# Working 1Password CLI (i.e. 'op')
+# Set OP_VAULT_ID or OP_VAULT_NAME and the script will lookup the value using 'op' to set OP_VAULT_ID
+# Set OP_CONNECT_HOST or OP_CONNECT_HOST_ITEM_NAME and OP_CONNECT_HOST_FIELD_NAME and the script will lookup the value using 'op' to set OP_CONNECT_HOST
+# Set OP_CONNECT_TOKEN_ITEM_NAME and OP_CONNECT_TOKEN_FIELD_NAME and the script will lookup the value using 'op' to set OP_CONNECT_TOKEN
+#
+# Example:
+# opc anisble-playbook runstuff.yml --arg1 --arg2 ...
+# opc op whoami --format=json (should return user_type=CONNECT)
+#
+# Notes:
+# Secrets are NOT exported.
+# If calling from zsh this script won't know any aliases.
+# Set OP_VAULT_ID and OP_CONNECT_HOST to minimize lookups.
+
+shopt -s expand_aliases
+
+# Lookup our op-connect vault ID if not already defined
+if [ -z "$OP_VAULT_ID" ]
+then
+   if [ -n "$OP_VAULT_NAME" ]
+   then
+      OP_VAULT_ID=`op vault list --format json | jq -r '.[] | select(.name == "$OP_VAULT_NAME") | .id'`
+   else
+      echo "OP_VAULT_ID or OP_VAULT_NAME must be defined"
+      exit 1
+   fi
+fi
+
+# Lookup our op-connect hostname if not already defined
+if [ -z "$OP_CONNECT_HOST" ]
+then
+   if [ -n "$OP_CONNECT_HOST_ITEM_NAME" ]
+   then
+      if [ -n "$OP_CONNECT_HOST_FIELD_NAME" ]
+      then
+         OP_CONNECT_HOST=`op item get $OP_CONNECT_HOST_ITEM_NAME --reveal --fields label=$OP_CONNECT_HOST_FIELD_NAME`
+      else
+         echo OP_CONNECT_HOST or OP_CONNECT_HOST_FIELD_NAME must be defined
+         exit 1
+      fi
+   else
+      echo OP_CONNECT_HOST or OP_CONNECT_HOST_ITEM_NAME must be defined
+      exit 1
+   fi
+fi
+
+# Retrieve our op-connect token
+if [ -n "$OP_CONNECT_TOKEN_ITEM_NAME" ]
+then
+   if [ -n "$OP_CONNECT_TOKEN_FIELD_NAME" ]
+   then
+      OP_CONNECT_TOKEN=`op item get $OP_CONNECT_TOKEN_ITEM_NAME --reveal --fields label=$OP_CONNECT_TOKEN_FIELD_NAME`
+   else
+      echo OP_CONNECT_TOKEN_FIELD_NAME must be defined
+      exit 1
+   fi
+else
+   echo OP_CONNECT_TOKEN_ITEM_NAME must be defined
+   exit 1
+fi
+
+# Test if our 1Password Connect server is up and running
+USER_TYPE=`OP_CONNECT_HOST=$OP_CONNECT_HOST OP_VAULT_ID=$OP_VAULT_ID OP_CONNECT_TOKEN=$OP_CONNECT_TOKEN op --format=json whoami | jq -r '.["user_type"]'`
+if [ "$USER_TYPE" = "CONNECT" ]
+then
+   OP_CONNECT_HOST=$OP_CONNECT_HOST OP_VAULT_ID=$OP_VAULT_ID OP_CONNECT_TOKEN=$OP_CONNECT_TOKEN $*
+else
+   # fallback
+   $*
+fi
