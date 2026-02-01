@@ -88,3 +88,9 @@ source "$HOME/.config/zsh/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S')
 AGKOZAK_PROMPT_CHAR=( ❯ ❯ ❮ )
 AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+if command -v git > /dev/null
+then
+   AGKOZAK_SHOW_STASH=1
+else
+   AGKOZAK_SHOW_STASH=0
+fi
