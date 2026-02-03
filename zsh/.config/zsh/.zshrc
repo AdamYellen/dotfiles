@@ -29,8 +29,8 @@ alias a="ansible"
 alias ap="ansible-playbook"
 if command -v eza >/dev/null
 then
-   alias ls="eza --icons --group-directories-first -A"
-   alias l="eza --icons --group-directories-first -lA"
+   alias ls="eza --icons --group-directories-first -A --git"
+   alias l="eza --icons --group-directories-first -lA --git"
 else
    alias ls="ls --color -AF"
    alias l="ls --color -lAF"
