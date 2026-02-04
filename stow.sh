@@ -3,6 +3,7 @@
 DOTFILES_DIR="$HOME/.dotfiles"
 
 DIRS=(
+  "bat"
   "bin"
   "ghostty"
   "git"
