@@ -37,6 +37,7 @@ else
 fi
 alias grep="grep --color=auto"
 alias diff="diff --color=auto"
+alias gs="git status"
 
 # Completions
 autoload -U compinit

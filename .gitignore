@@ -2,3 +2,4 @@ bundle/cache
 secrets
 rbenv/*/
 Brewfile.lock.json
+vim/.config/vim/.netrwhist

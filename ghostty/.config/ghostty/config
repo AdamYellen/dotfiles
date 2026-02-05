@@ -1,19 +1,27 @@
-#theme = Highway
-theme = Gruvbox Dark Hard
-#theme = Ayu
-#theme = Catppuccin Mocha
-#background-opacity = 0.90
-#background-blur-radius = 20
+# ghostty +list-fonts
 font-family = "JetBrainsMono Nerd Font Mono"
 font-family = "Inconsolata Nerd Font Mono"
-font-size = 16
+font-size = 15
 adjust-cell-width = -7%
 adjust-cell-height = 10%
+
+# ghostty +list-themes
+#theme = Highway
+#theme = Ayu
+#theme = Catppuccin Mocha
+theme = Gruvbox Dark Hard
+
+background-opacity = 0.96
+background-blur-radius = 40
 window-width = 130
 window-height = 32
 window-padding-x = 20
 window-padding-y = 10
+
 macos-icon = retro
 macos-titlebar-style = transparent
 macos-option-as-alt = true
+
 shell-integration-features = ssh-terminfo
+window-inherit-working-directory = false
+working-directory = home
