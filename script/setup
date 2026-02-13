@@ -1,32 +1,12 @@
 #!/bin/sh
 # Install all dotfiles into the home directory
 
-if [ -L "$0" ]; then
-  SCRIPTSETUP="$(readlink "$0")"
+if [ -x "$HOME/.dotfiles/stow.sh" ]
+then
+  "$HOME/.dotfiles/stow.sh"
 else
-  SCRIPTSETUP="$0"
+  echo "Stow setup is missing"
 fi
-
-DOTFILESDIRREL=$(dirname $SCRIPTSETUP)
-cd $DOTFILESDIRREL/..
-DOTFILESDIR=$(pwd -P)
-
-# Setup bare minimum dotfile symlinks for Strap process
-# The rest will be later handled by stow
-# setup SSH
-rm -rf "$HOME/.ssh"
-ln -sv "$DOTFILESDIR/ssh/.ssh" "$HOME/.ssh"
-
-# setup GPG
-rm -rf "$HOME/.gnupg"
-ln -sv "$DOTFILESDIR/gnupg/.gnupg" "$HOME/.gnupg"
-
-# setup bin
-rm -rf "$HOME/.bin"
-ln -sv "$DOTFILESDIR/bin/.bin" "$HOME/.bin"
-
-# Use our minimal Brewfile
-ln -sfv "$DOTFILESDIR/Brewfile.strap-deps" "$HOME/.Brewfile"
 
 if [ -n "$CODESPACES" ]; then
   # Fix up Codespaces permissions

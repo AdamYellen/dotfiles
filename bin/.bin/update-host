@@ -6,13 +6,13 @@
 mkdir -p ~/Projects
 
 # Run OS-specific setup script
-if [ "$HOME/.bin/host-darwin" ]
+if [ `$HOME/.bin/host-is-darwin` ]
 then
    if [ -x "$HOME/.bin/update-host-darwin" ]
    then
       "$HOME/.bin/update-host-darwin"
    fi
-elif [ "$HOME/.bin/host-linux" ]
+elif [ `$HOME/.bin/host-is-linux` ]
 then
    if [ -x "$HOME/.bin/update-host-linux" ]
    then

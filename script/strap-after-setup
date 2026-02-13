@@ -1,51 +1,57 @@
 #!/bin/sh
 # Run by Strap after installing Brewfile dependencies
 
-cd $(dirname $0)/..
-
-# Prompt the user
-echo "!! IMPORTANT !!"
-read -p "This script requires user input -- Press Return to continue"
-
-# Setup 1Password
-if [ -n ${OP_SIGNUP_URI}]
+if [ `$HOME/.bin/host-is-darwin` -eq 0 ]
 then
-  read -s -p "Please enter a 1Password signup URI: "
-  OP_SIGNUP_URI=${REPLY}
-fi
-echo "!! IMPORTANT !!"
-echo "Press Return to continue AFTER 1Password is setup. Sign in and enable CLI under Developer settings."
-open /Applications/1Password.app --args --disable-gpu "${OP_SIGNUP_URI}"
-read
+  # MacOS
+  cd $(dirname $0)/..
 
-# Retrieve our secrets from 1Password
-bin/extract-onepassword-secrets
-if [ -f "$HOME/.secrets" ]
-then
-  source ~/.secrets
+  # Prompt the user
+  echo "!! IMPORTANT !!"
+  read -p "This script requires user input -- Press Return to continue"
+
+  # Setup 1Password
+  if [ -z ${OP_SIGNUP_URI}]
+  then
+    read -s -p "Please enter a 1Password signup URI: "
+    OP_SIGNUP_URI=${REPLY}
+  fi
+  echo "!! IMPORTANT !!"
+  echo "Press Return to continue AFTER 1Password is setup. Sign in and enable CLI under Developer settings."
+  open /Applications/1Password.app --args --disable-gpu "${OP_SIGNUP_URI}"
+  read
+
+  # Retrieve our secrets from 1Password
+  bin/extract-onepassword-secrets
+  if [ -f "$HOME/.secrets" ]
+  then
+    source ~/.secrets
+  else
+    echo "Secrets are missing!" >&2
+    exit 1
+  fi
+
+  # Setup Syncthing
+  echo "!! IMPORTANT !!"
+  echo "Press Return to continue AFTER the sync completes... "
+  open /Applications/Syncthing.app
+  sleep 10
+  defaults write com.github.xor-gate.syncthing-macosx StartAtLogin 1
+  if [[ -n "$SECRET_SYNCTHING_MASTER_DEVICE_ID" && -n "$SECRET_SYNCTHING_MASTER_FOLDER_ID" ]]
+  then
+    /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config devices add --device-id "${SECRET_SYNCTHING_MASTER_DEVICE_ID}"
+    /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config folders add --id "${SECRET_SYNCTHING_MASTER_FOLDER_ID}" --label "configs (~/.sync)" --path "~/.sync"
+  fi
+  sleep 5
+  open "http://127.0.0.1:8384"
+  read
+  if ! [ -f "$HOME/.sync/.first-sync" ]
+  then
+    echo "Syncthing is not setup!" >&2
+    exit 1
+  fi
 else
-  echo "Secrets are missing!" >&2
-  exit 1
-fi
-
-# Setup Syncthing
-echo "!! IMPORTANT !!"
-echo "Press Return to continue AFTER the sync completes... "
-open /Applications/Syncthing.app
-sleep 10
-defaults write com.github.xor-gate.syncthing-macosx StartAtLogin 1
-if [[ -n "$SECRET_SYNCTHING_MASTER_DEVICE_ID" && -n "$SECRET_SYNCTHING_MASTER_FOLDER_ID" ]]
-then
-  /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config devices add --device-id "${SECRET_SYNCTHING_MASTER_DEVICE_ID}"
-  /Applications/Syncthing.app/Contents/Resources/syncthing/syncthing cli config folders add --id "${SECRET_SYNCTHING_MASTER_FOLDER_ID}" --label "configs (~/.sync)" --path "~/.sync"
-fi
-sleep 5
-open "http://127.0.0.1:8384"
-read
-if ! [ -f "$HOME/.sync/.first-sync" ]
-then
-  echo "Syncthing is not setup!" >&2
-  exit 1
+  # Linux distros
 fi
 
 # Run our regular host update script
