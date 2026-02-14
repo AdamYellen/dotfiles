@@ -8,6 +8,7 @@ DIRS=(
   "ghostty"
   "git"
   "gnupg"
+  "homebrew"
   "ssh"
   "vim"
   "zsh"

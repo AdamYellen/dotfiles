@@ -19,7 +19,11 @@ fi
 ##################################################################
 
 # Ensure auto-update is always enabled
-sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate true
+defaults read /Library/Preferences/com.apple.commerce.plist AutoUpdate | grep -q true
+if [ $? -ne 0 ]
+then
+   sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate true
+fi
 
 # Decrease Dock auto-hide delay
 defaults write com.apple.dock "autohide-delay" -float "0.05"
@@ -47,3 +51,14 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores "true"
 
 # Restart Finder
 killall Finder
+
+# Enable true hibernation mode if a laptop
+/usr/sbin/ioreg -c AppleSmartBattery -r | awk '/BatteryInstalled/ {print $3}' | grep -q "Yes"
+if [ $? -eq 0 ]
+then
+  pmset -g | grep hibernatemode | grep 25 -q
+  if [ $? -ne 0 ]
+  then
+    sudo pmset -a hibernatemode 25
+  fi
+fi
