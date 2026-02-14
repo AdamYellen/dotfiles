@@ -5,13 +5,6 @@ brew update -q
 
 # script/install-vscode-extensions
 
-# Enable TouchID for sudo
-brew install -q artginzburg/tap/sudo-touchid
-
-# Install our fonts
-# AY: maybe add to Brewfile instead
-# brew install $( brew search font | grep -e meslo -e for-powerline | tr '\n' ' ' )
-
 # Normalize 1Password paths across MacOS and Linux
 mkdir -p ~/.1password
 ln -sf ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ~/.1password/agent.sock

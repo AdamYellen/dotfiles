@@ -1,11 +1,62 @@
 #!/bin/sh
 # Install all dotfiles into the home directory
 
-if [ -x "$HOME/.dotfiles/stow.sh" ]
+LINUX_NATIVE_PACKAGES=
+  bat \
+  eza \
+  openssh-server \
+  stow \
+  tealdeer \
+  vim \
+  zsh
+
+# Install our deps
+  if [ "$(uname -s)" == "Darwin" ]
+  then
+    if [[ -x "$(command -v brew)" ]]
+    then
+      brew install stow
+    else
+      echo "Can't find homebrew"
+      exit 1
+    fi
+  else
+    DISTRO="$(lsb_release -is)"
+    if [ "$DISTRO" == "Ubuntu" ] || [ "$DISTRO" == "Debian" ]
+    then
+      sudo apt-get -y install $LINUX_NATIVE_PACKAGES
+
+    elif [ "$DISTRO" == "RedHat" ] || [ "$DISTRO" == "RHEL" ] || [ "$DISTRO" == "CentOS" ]
+    then
+      sudo yum -y install $LINUX_NATIVE_PACKAGES
+    elif [ "$DISTRO" == "Fedora" ]
+    then
+      sudo dnf -y install $LINUX_NATIVE_PACKAGES
+    elif [ "$DISTRO" == "Arch" ] || [ "$DISTRO" == "ManjaroLinux" ]
+    then
+      sudo pacman -Sy --noconfirm --needed $LINUX_NATIVE_PACKAGES
+    else
+      echo "Unknown/unsupported Linux distro"
+      exit 1
+    fi
+  fi
+
+if [ -x "$HOME/.dotfiles/bin/.bin/stow.sh" ]
 then
-  "$HOME/.dotfiles/stow.sh"
+  "$HOME/.dotfiles/bin/.bin/stow.sh"
 else
   echo "Stow setup is missing"
+fi
+
+# Change our shell to ZSH
+ZSH=`which zsh`
+if [ -n "$ZSH" ]
+then
+  if [ "$0" != "$ZSH" ]
+  then
+    sudo chsh -s "$ZSH" "$USER"
+    logk
+  fi
 fi
 
 if [ -n "$CODESPACES" ]; then
