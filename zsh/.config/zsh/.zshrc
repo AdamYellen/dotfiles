@@ -41,7 +41,7 @@ alias gs="git status"
 
 # Completions
 autoload -U compinit
-compinit -d "$HOME/.cache/.zcompdump-${ZSH_VERSION}
+compinit -d "$HOME/.cache/.zcompdump-${ZSH_VERSION}"
 
 # Other utils/exports
 export LESSHISTFILE="$HOME/.cache/.lesshst"

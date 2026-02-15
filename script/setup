@@ -1,15 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 # Install all dotfiles into the home directory
 # Establishes a common base for all systems
 
-LINUX_NATIVE_PACKAGES=
+LINUX_NATIVE_PACKAGES="\
   bat \
   eza \
   openssh-server \
   stow \
   tealdeer \
   vim \
-  zsh
+  zsh"
 
 # Install our deps
   if [ "$(uname -s)" == "Darwin" ]
