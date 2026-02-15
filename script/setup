@@ -1,5 +1,6 @@
 #!/bin/sh
 # Install all dotfiles into the home directory
+# Establishes a common base for all systems
 
 LINUX_NATIVE_PACKAGES=
   bat \
@@ -26,6 +27,12 @@ LINUX_NATIVE_PACKAGES=
     then
       sudo apt-get -y install $LINUX_NATIVE_PACKAGES
 
+      # Remove snap
+      $HOME/.dotfiles/script/remove-snap
+
+      # Install flakpak
+      sudo apt install flatpak gnome-software gnome-software-plugin-flatpak -y
+      sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     elif [ "$DISTRO" == "RedHat" ] || [ "$DISTRO" == "RHEL" ] || [ "$DISTRO" == "CentOS" ]
     then
       sudo yum -y install $LINUX_NATIVE_PACKAGES

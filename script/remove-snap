@@ -1,0 +1,35 @@
+#!/bin/bash
+# Portions copied from: https://github.com/AbDuus/removeSnap/nexageek-remove-snap.sh
+
+# Remove all snaps
+snap list | grep -vE 'bare|core|snapd' | awk '{print $1}' | while read -r snap
+do
+  sudo snap remove "$snap"
+done
+
+# Stop and remove snapd service
+sudo systemctl stop snapd
+sudo systemctl disable snapd
+sudo systemctl mask snapd
+
+# Purge Snapd and prevent its reinstallation
+sudo apt purge snapd -y
+sudo apt-mark hold snapd
+
+# Remove Snap-related directories
+for dir in ~/snap /snap /var/snap /var/lib/snapd /root/snap /run/udev/tags/snap* /etc/fonts/snap-override
+do
+  if [ -d "$dir" ] || [ -e "$dir" ]
+  then
+    sudo rm -rf "$dir"
+  fi
+done
+
+# Prevent Snapd from being installed again
+PREFERENCES_FILE="/etc/apt/preferences.d/nosnap.pref"
+if [ ! -f "$PREFERENCES_FILE" ]
+then
+  echo -e "Package: snapd\nPin: release a=*\nPin-Priority: -10" | sudo tee "$PREFERENCES_FILE" > /dev/null
+fi
+
+sudo apt update
