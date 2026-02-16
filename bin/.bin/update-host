@@ -5,6 +5,17 @@
 # Setup my home directory how I like it
 mkdir -p ~/Projects
 
+# Update Homebrew
+brew update -q
+
+# Run host-specific Brewfile
+HOSTNAME=`hostname -s`
+BREWFILE="$HOME/.sync/homebrew/Brewfile-$HOSTNAME"
+if [ -f "BREWFILE" ]
+then
+   brew bundle check --file "$BREWFILE" || brew bundle --file "$BREWFILE"
+fi
+
 # Run OS-specific setup script
 if [ `$HOME/.bin/host-is-darwin` ]
 then

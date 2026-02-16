@@ -1,52 +1,45 @@
 #!/bin/bash
+# Establishes a common CLI base for all systems
 # Install all dotfiles into the home directory
-# Establishes a common base for all systems
-
-LINUX_NATIVE_PACKAGES="\
-  bat \
-  eza \
-  openssh-server \
-  stow \
-  tealdeer \
-  vim \
-  zsh"
+#
+# Strap (prep, basic deps, install homebrew) -> <this script> -> Strap (brew bundle) -> dotfiles/script/strap-after-setup -> dotfiles/bin/update-host
 
 # Install our deps
-  if [ "$(uname -s)" == "Darwin" ]
+if [ "$(uname -s)" == "Darwin" ]
+then
+  if [[ -x "$(command -v brew)" ]]
   then
-    if [[ -x "$(command -v brew)" ]]
-    then
-      brew install stow
-    else
-      echo "Can't find homebrew"
-      exit 1
-    fi
+    brew install stow
   else
-    DISTRO="$(lsb_release -is)"
-    if [ "$DISTRO" == "Ubuntu" ] || [ "$DISTRO" == "Debian" ]
-    then
-      sudo apt-get -y install $LINUX_NATIVE_PACKAGES
-
-      # Remove snap
-      $HOME/.dotfiles/script/remove-snap
-
-      # Install flakpak
-      sudo apt install flatpak gnome-software gnome-software-plugin-flatpak -y
-      sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    elif [ "$DISTRO" == "RedHat" ] || [ "$DISTRO" == "RHEL" ] || [ "$DISTRO" == "CentOS" ]
-    then
-      sudo yum -y install $LINUX_NATIVE_PACKAGES
-    elif [ "$DISTRO" == "Fedora" ]
-    then
-      sudo dnf -y install $LINUX_NATIVE_PACKAGES
-    elif [ "$DISTRO" == "Arch" ] || [ "$DISTRO" == "ManjaroLinux" ]
-    then
-      sudo pacman -Sy --noconfirm --needed $LINUX_NATIVE_PACKAGES
-    else
-      echo "Unknown/unsupported Linux distro"
-      exit 1
-    fi
+    echo "Can't find homebrew"
+    exit 1
   fi
+else
+  DISTRO="$(lsb_release -is)"
+  if [ "$DISTRO" == "Ubuntu" ] || [ "$DISTRO" == "Debian" ]
+  then
+    sudo apt-get -y install stow zsh openssh-server
+
+    # Remove snap
+    # $HOME/.dotfiles/script/remove-snap
+
+    # Install flakpak
+    sudo apt install flatpak gnome-software gnome-software-plugin-flatpak -y
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  elif [ "$DISTRO" == "RedHat" ] || [ "$DISTRO" == "RHEL" ] || [ "$DISTRO" == "CentOS" ]
+  then
+    sudo yum -y install stow
+  elif [ "$DISTRO" == "Fedora" ]
+  then
+    sudo dnf -y install stow
+  elif [ "$DISTRO" == "Arch" ] || [ "$DISTRO" == "ManjaroLinux" ]
+  then
+    sudo pacman -Sy --noconfirm --needed stow
+  else
+    echo "Unknown/unsupported Linux distro"
+    exit 1
+  fi
+fi
 
 if [ -x "$HOME/.dotfiles/bin/.bin/stow.sh" ]
 then
