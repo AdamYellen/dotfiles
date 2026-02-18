@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 # Run by Strap after installing Brewfile dependencies
+# NOTE: during strap run our eventual environment (e.g. path) should not be expected
 
-if [ `$HOME/.bin/host-is-darwin` -eq 0 ]
+if [ `$HOME/.bin/host-is-darwin` ]
 then
   # MacOS
   cd $(dirname $0)/..
@@ -11,7 +12,7 @@ then
   read -p "This script requires user input -- Press Return to continue"
 
   # Setup 1Password
-  if [ -z ${OP_SIGNUP_URI}]
+  if [ -z ${OP_SIGNUP_URI} ]
   then
     read -s -p "Please enter a 1Password signup URI: "
     OP_SIGNUP_URI=${REPLY}
@@ -50,7 +51,8 @@ then
     echo "Syncthing is not setup!" >&2
     exit 1
   fi
-else
+elif [ `$HOME/.bin/host-is-linux` ]
+then
   # Linux distros
 
   # Prompt the user
