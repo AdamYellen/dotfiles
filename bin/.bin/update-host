@@ -8,6 +8,13 @@ mkdir -p ~/Projects
 # Update Homebrew
 brew update -q
 
+# Update tldr
+TLDR=`which tldr`
+if [ -x "$TLDR" ]
+then
+   "$TLDR" update
+fi
+
 # Run host-specific Brewfile
 HOSTNAME=`hostname -s`
 BREWFILE="$HOME/.sync/homebrew/Brewfile-$HOSTNAME"

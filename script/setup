@@ -26,6 +26,12 @@ else
     # Install flakpak
     sudo apt install flatpak gnome-software gnome-software-plugin-flatpak -y
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+    # Install desktop apps
+    $HOME/.dotfiles/script/ubuntu-install-1password
+    $HOME/.dotfiles/script/ubuntu-install-rustdesk
+    $HOME/.dotfiles/script/ubuntu-install-syncthing
+
   elif [ "$DISTRO" == "RedHat" ] || [ "$DISTRO" == "RHEL" ] || [ "$DISTRO" == "CentOS" ]
   then
     sudo yum -y install stow

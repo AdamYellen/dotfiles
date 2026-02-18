@@ -1,0 +1,10 @@
+#!/bin/bash
+
+VERSION="1.4.5"
+
+DOWNLOAD_FILE="$(mktemp)"
+curl -sL -o "${DOWNLOAD_FILE}.deb" https://github.com/rustdesk/rustdesk/releases/download/${VERSION}/rustdesk-${VERSION}-x86_64.deb
+sudo apt install -yf "${DOWNLOAD_FILE}.deb"
+rm -f "${DOWNLOAD_FILE}.deb"
+
+exit 0

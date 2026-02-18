@@ -1,1 +1,7 @@
 #!/bin/bash
+
+# Normalize 1Password paths across MacOS and Linux
+if command -v /usr/bin/op >/dev/null
+then
+   ln -sf /usr/bin/op /usr/local/bin/op
+fi

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+[ "$USER" = "root" ] && echo "Run as yourself, not root." && exit 1
+
+# Fetch keyring
+sudo curl -L -o /etc/apt/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg
+
+# Create deb822 source
+cat <<EOF | sudo tee /etc/apt/sources.list.d/syncthing.sources >/dev/null
+Types: deb
+URIs: https://apt.syncthing.net/
+Suites: syncthing
+Components: stable-v2
+Signed-By: /etc/apt/keyrings/syncthing-archive-keyring.gpg
+EOF
+
+# Update apt
+sudo apt -q update
+
+# Install
+sudo apt install -y syncthing
+
+# Setup and start service
+sudo systemctl daemon-reload
+systemctl --user enable syncthing.service
+systemctl --user start syncthing.service
+
+exit 0
