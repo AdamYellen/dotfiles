@@ -52,6 +52,48 @@ then
   fi
 else
   # Linux distros
+
+  # Prompt the user
+  echo "!! IMPORTANT !!"
+  read -p "This script requires user input -- Press Return to continue"
+
+  # Setup 1Password
+  if command -v 1password >/dev/null
+  then
+    if [ -z ${OP_SIGNUP_URI}]
+    then
+      read -s -p "Please enter a 1Password signup URI: "
+      OP_SIGNUP_URI=${REPLY}
+    fi
+    echo "!! IMPORTANT !!"
+    echo "Press Return to continue AFTER 1Password is setup. Sign in and enable CLI under Developer settings."
+    1password "${OP_SIGNUP_URI}"
+    read
+  else
+    echo "1Password not installed, skipping."
+  fi
+
+  # Setup Syncthing
+  if command -v syncthing >/dev/null
+  then
+    echo "!! IMPORTANT !!"
+    echo "Press Return to continue AFTER the sync completes... "
+    if [[ -n "$SECRET_SYNCTHING_MASTER_DEVICE_ID" && -n "$SECRET_SYNCTHING_MASTER_FOLDER_ID" ]]
+    then
+      syncthing cli config devices add --device-id "${SECRET_SYNCTHING_MASTER_DEVICE_ID}"
+      syncthing cli config folders add --id "${SECRET_SYNCTHING_MASTER_FOLDER_ID}" --label "configs (~/.sync)" --path "~/.sync"
+    fi
+    sleep 5
+    open "http://127.0.0.1:8384"
+    read
+    if ! [ -f "$HOME/.sync/.first-sync" ]
+    then
+      echo "Syncthing is not setup!" >&2
+      exit 1
+    fi
+  else
+    echo "Syncthing not installed, skipping."
+  fi
 fi
 
 # Run our regular host update script
