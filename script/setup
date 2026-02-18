@@ -29,8 +29,10 @@ else
 
     # Install desktop apps
     $HOME/.dotfiles/script/ubuntu-install-1password
+    $HOME/.dotfiles/script/ubuntu-install-deskflow
     $HOME/.dotfiles/script/ubuntu-install-rustdesk
     $HOME/.dotfiles/script/ubuntu-install-syncthing
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"
 
   elif [ "$DISTRO" == "RedHat" ] || [ "$DISTRO" == "RHEL" ] || [ "$DISTRO" == "CentOS" ]
   then

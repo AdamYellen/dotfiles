@@ -2,11 +2,13 @@
 
 [ "$USER" = "root" ] && echo "Run as yourself, not root." && exit 1
 
-OWNER=rustdesk
-REPO=rustdesk
-PACKAGE=rustdesk
+OWNER=deskflow
+REPO=deskflow
+PACKAGE=deskflow
 source /etc/os-release
 ARCH=$(dpkg --print-architecture)
+
+# E.g. https://github.com/deskflow/deskflow/releases/download/v1.26.0/deskflow-1.26.0-ubuntu-questing-x86_64.deb
 
 if [ $ARCH == "amd64" ]
 then
@@ -16,13 +18,11 @@ else
    exit 1
 fi
 
-# E.g. https://github.com/rustdesk/rustdesk/releases/download/1.4.5/rustdesk-1.4.5-x86_64.deb
-
 case "$ID" in
    ubuntu)
       if [[ "$VERSION_ID" =~ ^(25.10|24.04)$ ]]
       then
-         SUFFIX="${ARCH}"
+         SUFFIX="ubuntu-${VERSION_CODENAME}-${ARCH}"
       else
          echo "This installer is not compatible with Ubuntu $VERSION_ID"
          exit 1
@@ -36,7 +36,7 @@ esac
 
 DEB_URL=$(
    curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | \
-   grep -oP "https://github.com/${OWNER}/${REPO}/releases/download/[^\s/]+/${PACKAGE}-[^\s/-]+-${SUFFIX}.deb"
+   grep -oP "https://github.com/${OWNER}/${REPO}/releases/download/[^\s/]+/${PACKAGE}-[^\s/_]+-${SUFFIX}.deb"
 )
 if [[ -z "$DEB_URL" ]]
 then
@@ -52,5 +52,27 @@ curl -Ls -o "$DEB_FILEPATH" "$DEB_URL"
 echo "Installing ${DEB_FILE}..."
 sudo apt install -q -yf "$DEB_FILEPATH"
 rm "$DEB_FILEPATH"
+
+# Create systemd service
+cat <<EOF | sudo tee /usr/lib/systemd/user/deskflow.service >/dev/null
+[Unit]
+Description=Deskflow
+Requires=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/deskflow
+Type=exec
+TimeoutSec=60
+
+[Install]
+Alias=deskflow.service
+WantedBy=graphical-session.target
+EOF
+sudo systemctl daemon-reload
+
+# Start service
+systemctl --user enable deskflow
+systemctl --user start deskflow
 
 exit 0
