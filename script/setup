@@ -18,7 +18,7 @@ else
   DISTRO="$(lsb_release -is)"
   if [ "$DISTRO" == "Ubuntu" ] || [ "$DISTRO" == "Debian" ]
   then
-    sudo apt-get -y install stow zsh openssh-server
+    sudo apt-get -y install openssh-server stow vim zsh
 
     # Remove snap
     # $HOME/.dotfiles/script/remove-snap

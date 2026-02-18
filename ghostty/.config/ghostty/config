@@ -25,3 +25,6 @@ macos-option-as-alt = true
 shell-integration-features = ssh-terminfo
 window-inherit-working-directory = false
 working-directory = home
+
+# Allow for a local config override
+config-file = ?~/.ghostty-local

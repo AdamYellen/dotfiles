@@ -43,15 +43,15 @@ then
    echo "Error: Failed to retrieve the .deb package URL from GitHub."
    exit 1
 fi
-DEB_FILE=$(basename "$DEB_URL")
+DEB_FILE=$(basename $DEB_URL)
 DEB_FILEPATH=$(mktemp -t XXXXXXX.${DEB_FILE})
 
 echo "Downloading ${DEB_FILE}..."
-curl -Ls -o "$DEB_FILEPATH" "$DEB_URL"
+curl -Ls -o $DEB_FILEPATH $DEB_URL
 
 echo "Installing ${DEB_FILE}..."
-sudo apt install -q -yf "$DEB_FILEPATH"
-rm "$DEB_FILEPATH"
+sudo apt install -q -yf $DEB_FILEPATH
+rm $DEB_FILEPATH
 
 # Create systemd service
 cat <<EOF | sudo tee /usr/lib/systemd/user/deskflow.service >/dev/null
